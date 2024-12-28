@@ -18,6 +18,7 @@ import {
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
 } from "@expo-google-fonts/plus-jakarta-sans";
+import { Platform, StatusBar } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -58,6 +59,11 @@ export default function RootLayout() {
           </Stack>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={Platform.OS === "android" ? "light-content" : "default"}
+      />
     </ThemeProvider>
   );
 }

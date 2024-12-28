@@ -2632,12 +2632,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-native-onboarding-swiper@npm:^1":
+  version: 1.1.9
+  resolution: "@types/react-native-onboarding-swiper@npm:1.1.9"
+  dependencies:
+    "@types/react": "npm:*"
+    react-native: "npm:*"
+  checksum: 10c0/9c1afc4ea0a0738d4bc8fdfbf0aebba2cedc1df576649f33f9dec4b792fedb04517462c2c91c34310eb6ad369128ef310fdd76f4d8a66a46732c68571b1ad09b
+  languageName: node
+  linkType: hard
+
 "@types/react-test-renderer@npm:^18.3.0":
   version: 18.3.1
   resolution: "@types/react-test-renderer@npm:18.3.1"
   dependencies:
     "@types/react": "npm:^18"
   checksum: 10c0/9fc8467ff1a3f14be6cc3498a75fc788d2c92c0fffa7bf21269ed5d9d82db9195bf2178ddc42ea16a0836995c1b77601c6be8abb27bd1864668c418c6d0e5a3b
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*":
+  version: 19.0.2
+  resolution: "@types/react@npm:19.0.2"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/8992f39701fcf1bf893ef8f94a56196445667baf08fe4f6050a14e229a17aad3265ad3efc01595ff3b4d5d5c69da885f9aa4ff80f164a613018734efcff1eb8f
   languageName: node
   linkType: hard
 
@@ -4679,6 +4698,21 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 10c0/6bfbaf9365dd53127d8cc43f6167b6373520ef029d7f62d3f2599bf326a4ed137dfd8163ded21c97eb80555a091068bb6674529e04e2a31e4d89fe23e92f41a1
+  languageName: node
+  linkType: hard
+
+"expo-image@npm:~2.0.3":
+  version: 2.0.3
+  resolution: "expo-image@npm:2.0.3"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+    react-native-web: "*"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: 10c0/adceac4fbc29e375ed28fab00340db2fa290a0ab149ee296ddc700aadc75ceb9db657abd7a2fea17c1cd0dbd3a07c691df82b61dc684dbccf198ca95d5160a0a
   languageName: node
   linkType: hard
 
@@ -6749,12 +6783,14 @@ __metadata:
     "@react-navigation/native": "npm:^7.0.0"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:~18.3.12"
+    "@types/react-native-onboarding-swiper": "npm:^1"
     "@types/react-test-renderer": "npm:^18.3.0"
     expo: "npm:~52.0.20"
     expo-blur: "npm:~14.0.1"
     expo-constants: "npm:~17.0.3"
     expo-font: "npm:~13.0.2"
     expo-haptics: "npm:~14.0.0"
+    expo-image: "npm:~2.0.3"
     expo-linear-gradient: "npm:~14.0.1"
     expo-linking: "npm:~7.0.3"
     expo-router: "npm:~4.0.14"
@@ -6769,6 +6805,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-native: "npm:0.76.5"
     react-native-gesture-handler: "npm:~2.20.2"
+    react-native-onboarding-swiper: "npm:^1.3.0"
     react-native-reanimated: "npm:~3.16.1"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.1.0"
@@ -8499,6 +8536,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-onboarding-swiper@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "react-native-onboarding-swiper@npm:1.3.0"
+  dependencies:
+    tinycolor2: "npm:^1.4.1"
+  peerDependencies:
+    prop-types: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/c9582c67cfc2cf2c46a6965dafbd6aa046592d6b2d6d827b709772db3aca502c6963792c9d7c310f2d0f17d22771da7f21db3665396bd933da4f9b85e0a0bf7f
+  languageName: node
+  linkType: hard
+
 "react-native-reanimated@npm:~3.16.1":
   version: 3.16.6
   resolution: "react-native-reanimated@npm:3.16.6"
@@ -8602,7 +8652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.76.5":
+"react-native@npm:*, react-native@npm:0.76.5":
   version: 0.76.5
   resolution: "react-native@npm:0.76.5"
   dependencies:
@@ -9895,6 +9945,13 @@ __metadata:
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: 10c0/4b09f3774099de0d4df26d95c5821a62faee32c7e96fb1f4ebd54a2d7c11c57fe88b0a0d49cf375de5fee5ae6bf4eb56dbbf29d07366864e2ee805349970d3cc
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:^1.4.1":
+  version: 1.6.0
+  resolution: "tinycolor2@npm:1.6.0"
+  checksum: 10c0/9aa79a36ba2c2a87cb221453465cabacd04b9e35f9694373e846fdc78b1c768110f81e581ea41440106c0f24d9a023891d0887e8075885e790ac40eb0e74a5c1
   languageName: node
   linkType: hard
 

@@ -1,58 +1,141 @@
-import { StyleSheet } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
-import Size from "@/utils/hooks/useResponsiveSize";
-import { ThemedText } from "@/components/ThemedText";
-import AppButton from "@/components/AppButton";
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
+import { StyleSheet, ImageBackground, View } from "react-native";
 
-export default function Onboarding() {
+import AppButton from "../components/AppButton";
+import { ThemedText } from "@/components/ThemedText";
+import Size from "@/utils/hooks/useResponsiveSize";
+import { ThemedView } from "@/components/ThemedView";
+
+const OnboardingScreen = (): JSX.Element => {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
+
+  const pages = [
+    {
+      image: require("../assets/images/onboarding-1.png"),
+      title: "Celebrate love together",
+      subtitle:
+        "Never miss a special moment. We help you plan, celebrate, and cherish each memory with your partner.",
+    },
+    {
+      image: require("../assets/images/onboarding-2.png"),
+      title: "Build Memories, Your Way",
+      subtitle:
+        "From shared goals to personalized reminders, make every day count with moments and memories.",
+    },
+    {
+      image: require("../assets/images/onboarding-3.png"),
+      title: "Keep connection playful",
+      subtitle:
+        "Add a touch of fun with interactive games and heartfelt messages, designed to keep your bond strong and exciting.",
+    },
+  ];
+
+  const handleNext = (): void => {
+    if (currentIndex < pages.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      // Replace with your desired route after onboarding
+      // router.replace("/home");
+    }
+  };
+
+  const handleSkip = (): void => {
+    // Replace with your desired route after onboarding
+    // router.replace("/home");
+  };
+
   return (
-    <ThemedView style={styles.container} scrollable={false}>
-      <ThemedText type="title" style={styles.title}>
-        Welcome to SafeTrust
-      </ThemedText>
+    <ImageBackground
+      source={pages[currentIndex].image}
+      style={styles.backgroundImage}
+    >
+      <ThemedView style={styles.overlay}>
+        <ThemedText style={styles.title}>
+          {pages[currentIndex].title}
+        </ThemedText>
+        <ThemedText style={styles.subtitle}>
+          {pages[currentIndex].subtitle}
+        </ThemedText>
 
-      <ThemedText style={styles.subTitle} type="defaultSemiBold">
-        Discover Your Crypto Potential: Start Your Journey in the Future of
-        Finance
-      </ThemedText>
+        <View style={styles.pagination}>
+          {pages.map((_, index) => (
+            <View
+              key={index}
+              style={[styles.dot, index === currentIndex && styles.activeDot]}
+            />
+          ))}
+        </View>
 
-      <AppButton
-        style={styles.button}
-        title="Get Started"
-        // onPress={() => router.replace("/Login")}
-      />
-    </ThemedView>
+        <AppButton
+          title={currentIndex < pages.length - 1 ? "Next" : "Get Started"}
+          onPress={handleNext}
+        />
+        <AppButton
+          title="Skip"
+          onPress={handleSkip}
+          style={styles.skipButton}
+        />
+      </ThemedView>
+    </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: Size.calcWidth(30),
+    justifyContent: "flex-end",
   },
 
-  image: {
-    width: Size.calcAverage(350),
-    height: Size.calcAverage(300),
-    marginVertical: Size.calcHeight(30),
+  overlay: {
+    paddingHorizontal: Size.calcWidth(20),
+    paddingBottom: Size.calcHeight(40),
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    flex: 1,
+    justifyContent: "flex-end",
   },
 
   title: {
-    marginVertical: Size.calcHeight(30),
+    fontSize: Size.calcWidth(24),
+    fontWeight: "bold",
     textAlign: "center",
-    maxWidth: "80%",
+    color: "white",
+    marginBottom: Size.calcHeight(10),
   },
 
-  subTitle: {
+  subtitle: {
+    fontSize: Size.calcWidth(16),
     textAlign: "center",
-    marginBottom: Size.calcHeight(30),
+    color: "white",
+    marginBottom: Size.calcHeight(20),
   },
 
-  button: {
-    maxWidth: "90%",
+  pagination: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: Size.calcHeight(20),
+  },
+
+  dot: {
+    width: Size.calcWidth(8),
+    height: Size.calcWidth(8),
+    borderRadius: Size.calcWidth(4),
+    backgroundColor: "white",
+    marginHorizontal: Size.calcWidth(4),
+    opacity: 0.5,
+  },
+
+  activeDot: {
+    width: Size.calcWidth(20),
+    backgroundColor: "#592E83",
+    opacity: 1,
+  },
+
+  skipButton: {
+    backgroundColor: "rgba(225, 226, 229, 0.2)",
+    marginTop: Size.calcHeight(20),
   },
 });
+
+export default OnboardingScreen;
