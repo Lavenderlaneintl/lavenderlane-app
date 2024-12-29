@@ -16,6 +16,7 @@ export interface AppButtonProps extends TouchableOpacityProps {
   textStyles?: TextStyle;
   title: string;
   loading?: boolean;
+  icon?: React.ReactNode;
 }
 
 const AppButton = ({
@@ -23,6 +24,7 @@ const AppButton = ({
   title,
   onPress,
   loading,
+  icon,
 }: AppButtonProps): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const styles = dynamicStyles();
@@ -40,7 +42,17 @@ const AppButton = ({
       {loading ? (
         <ActivityIndicator size={Size.calcAverage(30)} color={color} />
       ) : (
-        <Text style={styles.text}>{title}</Text>
+        <>
+          {icon}
+          <Text
+            style={[
+              styles.text,
+              icon ? { marginLeft: Size.calcWidth(10) } : {},
+            ]}
+          >
+            {title}
+          </Text>
+        </>
       )}
     </TouchableOpacity>
   );

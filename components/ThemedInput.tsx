@@ -104,29 +104,38 @@ export default ThemeInput;
 const styles = StyleSheet.create({
   container: {
     marginVertical: Size.calcHeight(10),
+    width: "100%",
+    borderRadius: Size.calcAverage(25),
+    backgroundColor: "transparent",
   },
+
   label: {
     marginBottom: Size.calcHeight(5),
     fontSize: Size.calcAverage(14),
   },
+
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderRadius: 8,
+    borderWidth: 0.6,
     paddingHorizontal: 10,
-    height: Size.calcHeight(55),
+    borderRadius: Size.calcAverage(25),
+    height: Size.calcHeight(50),
   },
+
   input: {
     flex: 1,
     fontSize: Size.calcAverage(16),
   },
+
   inputWithLeftIcon: {
     marginLeft: 8,
   },
+
   icon: {
     marginHorizontal: 5,
   },
+
   errorText: {
     marginTop: Size.calcHeight(5),
     color: "red",

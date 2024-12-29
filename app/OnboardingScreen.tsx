@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { StyleSheet, ImageBackground, View } from "react-native";
 
-import AppButton from "../components/AppButton";
+import AppButton from "@/components/AppButton";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { ThemedView } from "@/components/ThemedView";
@@ -36,14 +36,12 @@ const OnboardingScreen = (): JSX.Element => {
     if (currentIndex < pages.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Replace with your desired route after onboarding
-      // router.replace("/home");
+      router.replace("/RegisterScreen");
     }
   };
 
   const handleSkip = (): void => {
-    // Replace with your desired route after onboarding
-    // router.replace("/home");
+    router.replace("/RegisterScreen");
   };
 
   return (
