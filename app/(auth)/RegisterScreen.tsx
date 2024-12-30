@@ -40,9 +40,15 @@ const RegisterScreen = (): JSX.Element => {
           placeholder="Enter your password"
           lightColor="white"
           darkColor="white"
+          isPassword
         />
       </View>
-      <AppButton title="Continue" />
+      <AppButton
+        title="Continue"
+        onPress={() => {
+          router.replace("/VerifyEmailScreen");
+        }}
+      />
       <ThemedText style={styles.or}>Or</ThemedText>
       <AppButton
         icon={<GoogleIcon />}

@@ -2,7 +2,7 @@ import { Theme } from "@react-navigation/native";
 
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
-const whiteColor = "#fff";
+const whiteColor = "#F9F9F9";
 
 export const Colors = {
   light: {
