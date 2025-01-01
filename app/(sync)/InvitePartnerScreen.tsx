@@ -1,59 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-  ActivityIndicator,
   Platform,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useRouter } from "expo-router";
 
 import { ThemedView } from "@/components/ThemedView";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
-import NumberPad from "@/components/NumberPad";
-import OTPInput from "@/components/OTPInput";
 
-const VerifyEmailScreen = (): JSX.Element => {
-  const pinLength = 4;
-  const router = useRouter();
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [pin, setPin] = useState<number[]>([]);
-
-  const handleSubmit = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.replace("/WelcomeScreen");
-    }, 2000);
-  };
-
-  const handleKeyPress = (key: number) => {
-    if (pin.length < pinLength) {
-      setPin((prevPin: number[]) => [...prevPin, key]);
-    }
-  };
-
-  const handleDelete = () => {
-    if (pin.length > 0) {
-      setPin((prevPin: number[]) => prevPin.slice(0, -1));
-    }
-  };
-
-  const handlePinChange = (newPin: number[]) => {
-    setPin(newPin);
-  };
-
-  useEffect(() => {
-    if (pin.length === pinLength) {
-      handleSubmit();
-    }
-  }, [pin]);
-
+const InvitePartnerScreen = (): JSX.Element => {
   return (
     <>
       {/* Background for StatusBar on iOS */}
@@ -69,40 +28,19 @@ const VerifyEmailScreen = (): JSX.Element => {
             <Ionicons name="chevron-back-outline" size={24} color="white" />
           </TouchableOpacity>
 
-          <ActivityIndicator
-            style={styles.loader}
-            size={Size.calcAverage(30)}
-            color="#AF8BEA"
-            animating={isLoading}
-          />
-
           <ThemedText type="title" style={{ marginTop: Size.calcHeight(30) }}>
             Check your mail box
           </ThemedText>
           <ThemedText style={styles.note}>
             Kindly enter the 4 digit code sent to your email
           </ThemedText>
-          <TouchableOpacity style={styles.resend}>
-            <ThemedText>
-              Resend code in <Text style={{ color: "#592E83" }}>00:33</Text>
-            </ThemedText>
-          </TouchableOpacity>
-          <OTPInput
-            pin={pin}
-            pinLength={pinLength}
-            onPinChange={handlePinChange}
-          />
-          <NumberPad
-            onDeletePress={handleDelete}
-            onNumberPress={handleKeyPress}
-          />
         </ThemedView>
       </ThemedView>
     </>
   );
 };
 
-export default VerifyEmailScreen;
+export default InvitePartnerScreen;
 
 const styles = StyleSheet.create({
   statusBarBackground: {
