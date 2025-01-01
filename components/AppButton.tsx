@@ -17,6 +17,7 @@ export interface AppButtonProps extends TouchableOpacityProps {
   title: string;
   loading?: boolean;
   icon?: React.ReactNode;
+  secondary?: boolean;
 }
 
 const AppButton = ({
@@ -25,6 +26,7 @@ const AppButton = ({
   onPress,
   loading,
   icon,
+  secondary,
 }: AppButtonProps): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const styles = dynamicStyles();
@@ -37,6 +39,7 @@ const AppButton = ({
         styles.button,
         style,
         Platform.OS === "ios" && { overflow: "visible" },
+        { backgroundColor: !secondary ? "#592E83" : "#F4F4F6" },
       ]}
     >
       {loading ? (
@@ -48,6 +51,7 @@ const AppButton = ({
             style={[
               styles.text,
               icon ? { marginLeft: Size.calcWidth(10) } : {},
+              { color: secondary ? "#373D51" : "#F4F4F6" },
             ]}
           >
             {title}
@@ -65,16 +69,14 @@ const dynamicStyles = () =>
       alignItems: "center",
       flexDirection: "row",
       borderRadius: Size.calcAverage(25),
-      height: Size.calcHeight(50),
+      height: Size.calcHeight(55),
       width: "100%",
       overflow: Platform.OS === "ios" ? "visible" : "hidden",
-      backgroundColor: "#592E83",
     },
 
     text: {
       fontSize: Size.calcWidth(16),
       fontWeight: "bold",
-      color: "white",
     },
   });
 

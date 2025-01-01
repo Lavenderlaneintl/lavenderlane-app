@@ -24,7 +24,12 @@ const WelcomeScreen = (): JSX.Element => {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
-        router.push("/InvitePartnerScreen");
+        router.push({
+          pathname: "/InvitePartnerScreen",
+          params: {
+            partnerName: username,
+          },
+        });
       }, 2000);
     }
   };
