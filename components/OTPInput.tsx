@@ -40,6 +40,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ pin, pinLength, onPinChange }) => {
         textContentType="oneTimeCode" // iOS OTP suggestion
         autoFocus
         onSubmitEditing={Keyboard.dismiss}
+        editable={false}
       />
 
       {/* OTP Input UI */}
