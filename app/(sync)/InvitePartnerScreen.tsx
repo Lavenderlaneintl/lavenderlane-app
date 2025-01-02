@@ -6,6 +6,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Share,
+  ShareContent,
 } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
@@ -13,12 +15,50 @@ import Size from "@/utils/hooks/useResponsiveSize";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import GroupUsers from "@/assets/svgs/GroupUsers";
-import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import AppButton from "@/components/AppButton";
 
 const InvitePartnerScreen = (): JSX.Element => {
   const router = useRouter();
-  const partnerName = useLocalSearchParams().partnerName ?? "";
+  const partnerName = useLocalSearchParams().partnerName as string;
+
+  const handleShareInvite = async () => {
+    const inviteLink = `https://yourapp.com/invite?partnerName=${encodeURIComponent(
+      partnerName
+    )}`;
+    const message = `Hey! Join me on this awesome app. Use the invite link below to get started:\n\n${inviteLink}`;
+
+    const title = "Invite to Our App";
+
+    const shareOptions = Platform.select({
+      ios: {
+        message,
+        url: inviteLink,
+        title,
+      },
+      android: {
+        message,
+      },
+    }) as ShareContent;
+
+    try {
+      const result = await Share.share(shareOptions);
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Customize actions based on activityType if needed
+          console.log(`Shared via activity type: ${result.activityType}`);
+        } else {
+          console.log("Shared successfully!");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share dismissed");
+      }
+    } catch (error: any) {
+      console.error("Error sharing invite link:", error.message);
+      alert("Oops! Something went wrong while sharing. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -64,7 +104,12 @@ const InvitePartnerScreen = (): JSX.Element => {
             title="QR Code"
           />
           <AppButton style={styles.btn} secondary title="Passcode" />
-          <AppButton style={styles.btn} secondary title="Invite Link" />
+          <AppButton
+            style={styles.btn}
+            onPress={handleShareInvite}
+            secondary
+            title="Invite Link"
+          />
         </ThemedView>
       </ThemedView>
     </>
