@@ -42,7 +42,10 @@ const ThemeInput: FC<InputProps> = ({
     props: { light: lightColor, dark: darkColor },
     colorName: "background",
   });
-  const textColor = useThemeColor({ colorName: "text" });
+  const textColor = useThemeColor({
+    colorName: "text",
+    props: { dark: "black" },
+  });
   const iconColor = useThemeColor({ colorName: "icon" });
   const borderColor = errorText ? "red" : iconColor;
   const placeholderColor = placeholderTextColor || iconColor;
@@ -139,6 +142,7 @@ const styles = StyleSheet.create({
   errorText: {
     marginTop: Size.calcHeight(5),
     color: "red",
-    fontSize: Size.calcAverage(12),
+    fontSize: Size.calcAverage(16),
+    fontWeight: "500",
   },
 });
