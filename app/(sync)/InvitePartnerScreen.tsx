@@ -57,7 +57,12 @@ const InvitePartnerScreen = (): JSX.Element => {
           >
             Using
           </ThemedText>
-          <AppButton style={styles.btn} secondary title="QR Code" />
+          <AppButton
+            style={styles.btn}
+            onPress={() => router.push("/DisplayQRCodeScreen")}
+            secondary
+            title="QR Code"
+          />
           <AppButton style={styles.btn} secondary title="Passcode" />
           <AppButton style={styles.btn} secondary title="Invite Link" />
         </ThemedView>
