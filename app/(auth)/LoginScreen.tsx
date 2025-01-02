@@ -22,7 +22,7 @@ import {
 
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"; // Replace this
 
-const RegisterScreen = (): JSX.Element => {
+const LoginScreen = (): JSX.Element => {
   const router = useRouter();
 
   const discovery = {
@@ -65,7 +65,7 @@ const RegisterScreen = (): JSX.Element => {
     >
       <CompleteLogo />
       <ThemedText style={[styles.texts, { marginTop: Size.calcHeight(40) }]}>
-        Create an account and get started
+        Login
       </ThemedText>
       <View style={{ marginBottom: Size.calcHeight(20), width: "100%" }}>
         <ThemeInput
@@ -82,38 +82,29 @@ const RegisterScreen = (): JSX.Element => {
           isPassword
         />
       </View>
-      <AppButton
-        title="Continue"
-        onPress={() => {
-          router.replace("/VerifyEmailScreen");
-        }}
-      />
+      <AppButton title="Login" />
       <ThemedText style={styles.or}>Or</ThemedText>
       <AppButton
         icon={<GoogleIcon />}
-        title="Sign up with Google"
+        title="Login with Google"
         style={styles.googleButton}
         onPress={() => promptAsync()}
         disabled={!request}
       />
       <TouchableOpacity
         style={{ marginTop: Size.calcHeight(20), flexDirection: "row" }}
-        onPress={() => router.push("/LoginScreen")}
+        onPress={() => router.push("/RegisterScreen")}
       >
-        <Text style={styles.texts}>Already have an account?</Text>
+        <Text style={styles.texts}>Don't have an account?</Text>
         <Text
           style={[
             styles.texts,
             { color: "#592E83", marginLeft: Size.calcWidth(7) },
           ]}
         >
-          Login
+          Register
         </Text>
       </TouchableOpacity>
-
-      <Text style={[styles.texts, { marginTop: Size.calcHeight(20) }]}>
-        By Signing up , you agree to our Terms of Service and Privacy Policy
-      </Text>
     </ImageBackground>
   );
 };
@@ -151,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default LoginScreen;
