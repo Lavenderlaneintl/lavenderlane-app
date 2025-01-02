@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "expo-router";
 import {
   StyleSheet,
@@ -11,13 +11,52 @@ import {
 import AppButton from "@/components/AppButton";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
-import { ThemedView } from "@/components/ThemedView";
 import CompleteLogo from "@/assets/svgs/CompleteLogo";
 import ThemeInput from "@/components/ThemedInput";
 import GoogleIcon from "@/assets/svgs/GoogleIcon";
+import {
+  makeRedirectUri,
+  ResponseType,
+  useAuthRequest,
+} from "expo-auth-session";
+
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"; // Replace this
 
 const RegisterScreen = (): JSX.Element => {
   const router = useRouter();
+
+  const discovery = {
+    authorizationEndpoint: "https://accounts.google.com/o/oauth2/auth",
+    tokenEndpoint: "https://oauth2.googleapis.com/token",
+    revocationEndpoint: "https://oauth2.googleapis.com/revoke",
+  };
+
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: GOOGLE_CLIENT_ID,
+      redirectUri: makeRedirectUri({
+        scheme: "your-app-scheme", // Optional custom scheme
+      }),
+      scopes: ["profile", "email"],
+      responseType: ResponseType.Token,
+    },
+    discovery
+  );
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { access_token } = response.params;
+
+      fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${access_token}` },
+      })
+        .then((res) => res.json())
+        .then((user) => {
+          console.log(user);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [response]);
 
   return (
     <ImageBackground
@@ -53,10 +92,9 @@ const RegisterScreen = (): JSX.Element => {
       <AppButton
         icon={<GoogleIcon />}
         title="Sign up with Google"
-        onPress={() => {
-          // router.replace("/home");
-        }}
         style={styles.googleButton}
+        onPress={() => promptAsync()}
+        disabled={!request}
       />
       <TouchableOpacity
         style={{ marginTop: Size.calcHeight(20), flexDirection: "row" }}
