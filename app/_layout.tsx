@@ -19,9 +19,12 @@ import {
   PlusJakartaSans_700Bold,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { Platform, StatusBar } from "react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Toastable from "react-native-toastable";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -45,25 +48,33 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : LightTheme}>
-      <GestureHandlerRootView>
-        <BottomSheetModalProvider>
-          <Stack
-            screenOptions={{
-              animation: "slide_from_right",
-              autoHideHomeIndicator: true,
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle={Platform.OS === "android" ? "light-content" : "default"}
-      />
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <Stack
+              screenOptions={{
+                animation: "slide_from_right",
+                autoHideHomeIndicator: true,
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle={Platform.OS === "android" ? "light-content" : "default"}
+        />
+        <Toastable
+          duration={5000}
+          messageStyle={{
+            textAlign: "center",
+          }}
+        />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

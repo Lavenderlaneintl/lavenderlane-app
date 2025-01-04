@@ -14,6 +14,7 @@ const MainScreen = (): JSX.Element => {
       try {
         const isOnboard = await getLocalData("isOnboard");
         if (isOnboard) {
+          router.push("/RegisterScreen");
         } else {
           router.push("/OnboardingScreen");
         }

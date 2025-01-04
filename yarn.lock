@@ -7090,6 +7090,7 @@ __metadata:
     react-native-screens: "npm:~4.1.0"
     react-native-svg: "npm:15.8.0"
     react-native-switch: "npm:^1.5.1"
+    react-native-toastable: "npm:^0.5.0"
     react-native-web: "npm:~0.19.13"
     react-native-webview: "npm:13.12.5"
     react-test-renderer: "npm:18.3.1"
@@ -8938,6 +8939,16 @@ __metadata:
   peerDependencies:
     react-native: ">=0.29"
   checksum: 10c0/10981815598dbea3690c5d6feb6a9a8d4635ff2f31ea44b78004a57c4ed81aa3097fb93fcb2d6c2d382ffe78c14268d03e83892e9f5d0e3e62c919906c6a9423
+  languageName: node
+  linkType: hard
+
+"react-native-toastable@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "react-native-toastable@npm:0.5.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/23d2c50fdcd801160e9c66efb25d6bd2adf189a96b19941fafee3288957d72ab42585a990b69c6d10e0c91ed7f5d6965358984bc79c730ef8bbe3ca6ee4ca8a4
   languageName: node
   linkType: hard
 

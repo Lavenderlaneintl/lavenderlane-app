@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import {
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import AppButton from "@/components/AppButton";
@@ -19,11 +20,47 @@ import {
   ResponseType,
   useAuthRequest,
 } from "expo-auth-session";
+import { useMutation } from "@tanstack/react-query";
+import { IRegisterPayload } from "@/utils/interfaces/auth.interfaces";
+import { RegisterUser } from "@/utils/apis/auth";
+import { showToastable } from "react-native-toastable";
 
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"; // Replace this
 
 const RegisterScreen = (): JSX.Element => {
   const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const {
+    data,
+    isPending,
+    mutate: handleRegisterMutate,
+  } = useMutation({
+    mutationFn: (payload: IRegisterPayload) => RegisterUser(payload),
+
+    onSuccess: () => {
+      setPassword("");
+      setEmailError("");
+      router.push({
+        pathname: "/VerifyEmailScreen",
+        params: { email: "email" },
+      });
+      setEmail("");
+      setPasswordError("");
+    },
+
+    onError: (error: any) => {
+      console.log({ error });
+      showToastable({
+        message: error.error || "something went wrong",
+        status: "success",
+      });
+    },
+  });
 
   const discovery = {
     authorizationEndpoint: "https://accounts.google.com/o/oauth2/auth",
@@ -43,20 +80,41 @@ const RegisterScreen = (): JSX.Element => {
     discovery
   );
 
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { access_token } = response.params;
+  const validateInputs = () => {
+    let isValid = true;
 
-      fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
-        .then((res) => res.json())
-        .then((user) => {
-          console.log(user);
-        })
-        .catch((err) => console.error(err));
+    // Validate email
+    if (!email) {
+      setEmailError("Email is required.");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      isValid = false;
+    } else {
+      setEmailError("");
     }
-  }, [response]);
+
+    // Validate password
+    if (!password) {
+      setPasswordError("Password is required.");
+      isValid = false;
+    } else if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters.");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    return isValid;
+  };
+
+  const handleRegister = async () => {
+    if (!validateInputs()) return;
+    handleRegisterMutate({
+      email,
+      password,
+    });
+  };
 
   return (
     <ImageBackground
@@ -73,20 +131,25 @@ const RegisterScreen = (): JSX.Element => {
           placeholder="Enter your email address"
           lightColor="white"
           darkColor="white"
+          value={email}
+          onChangeText={setEmail}
+          errorText={emailError}
         />
         <ThemeInput
           style={styles.input}
           placeholder="Enter your password"
           lightColor="white"
           darkColor="white"
+          value={password}
+          onChangeText={setPassword}
           isPassword
+          errorText={passwordError}
         />
       </View>
       <AppButton
         title="Continue"
-        onPress={() => {
-          router.replace("/VerifyEmailScreen");
-        }}
+        onPress={handleRegister}
+        loading={isPending}
       />
       <ThemedText style={styles.or}>Or</ThemedText>
       <AppButton

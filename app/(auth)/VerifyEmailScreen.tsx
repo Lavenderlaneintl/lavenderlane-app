@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ThemedView } from "@/components/ThemedView";
 import Size from "@/utils/hooks/useResponsiveSize";
@@ -16,20 +16,45 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ThemedText";
 import NumberPad from "@/components/NumberPad";
 import OTPInput from "@/components/OTPInput";
+import { useMutation } from "@tanstack/react-query";
+import { VerifyEmail } from "@/utils/apis/auth";
 
 const VerifyEmailScreen = (): JSX.Element => {
-  const pinLength = 4;
+  const pinLength = 6;
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const email = useLocalSearchParams().email as string;
   const [pin, setPin] = useState<number[]>([]);
 
-  const handleSubmit = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+  const {
+    data,
+    isPending: isLoading,
+    mutate,
+  } = useMutation({
+    mutationFn: VerifyEmail,
+
+    onSuccess: (data) => {
+      console.log({ data });
       router.replace("/WelcomeScreen");
-    }, 2000);
+
+      setPin([]);
+    },
+
+    onError: (error: any) => {
+      console.log({ error });
+    },
+  });
+
+  const handleSubmit = () => {
+    console.log({
+      email,
+      code: pin.join(""),
+    });
+
+    mutate({
+      email,
+      code: pin.join(""),
+    });
   };
 
   const handleKeyPress = (key: number) => {
@@ -65,7 +90,10 @@ const VerifyEmailScreen = (): JSX.Element => {
       />
       <ThemedView style={styles.container}>
         <ThemedView style={styles.wrapper}>
-          <TouchableOpacity style={styles.backIcon}>
+          <TouchableOpacity
+            style={styles.backIcon}
+            onPress={() => router.back()}
+          >
             <Ionicons name="chevron-back-outline" size={24} color="white" />
           </TouchableOpacity>
 

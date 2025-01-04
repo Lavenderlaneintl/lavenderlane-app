@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import {
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import AppButton from "@/components/AppButton";
@@ -19,11 +20,49 @@ import {
   ResponseType,
   useAuthRequest,
 } from "expo-auth-session";
+import { useMutation } from "@tanstack/react-query";
+import { IRegisterPayload } from "@/utils/interfaces/auth.interfaces";
+import { UserLogin } from "@/utils/apis/auth";
+import { showToastable } from "react-native-toastable";
 
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"; // Replace this
 
-const LoginScreen = (): JSX.Element => {
+const RegisterScreen = (): JSX.Element => {
   const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const {
+    data,
+    isPending,
+    mutate: handleRegisterMutate,
+  } = useMutation({
+    mutationFn: (payload: IRegisterPayload) => UserLogin(payload),
+
+    onSuccess: (data) => {
+      console.log({ data });
+
+      setPassword("");
+
+      setEmail("");
+    },
+
+    onError: (error: any) => {
+      console.log({ error });
+      if (error.metrics.hasOwnProperty("accountVerified")) {
+        router.push({
+          pathname: "/VerifyEmailScreen",
+          params: { email },
+        });
+      } else {
+        showToastable({
+          message: error.error || "something went wrong",
+          status: "success",
+        });
+      }
+    },
+  });
 
   const discovery = {
     authorizationEndpoint: "https://accounts.google.com/o/oauth2/auth",
@@ -43,20 +82,12 @@ const LoginScreen = (): JSX.Element => {
     discovery
   );
 
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { access_token } = response.params;
-
-      fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-        headers: { Authorization: `Bearer ${access_token}` },
-      })
-        .then((res) => res.json())
-        .then((user) => {
-          console.log(user);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [response]);
+  const handleLogin = async () => {
+    handleRegisterMutate({
+      email,
+      password,
+    });
+  };
 
   return (
     <ImageBackground
@@ -73,16 +104,20 @@ const LoginScreen = (): JSX.Element => {
           placeholder="Enter your email address"
           lightColor="white"
           darkColor="white"
+          value={email}
+          onChangeText={setEmail}
         />
         <ThemeInput
           style={styles.input}
           placeholder="Enter your password"
           lightColor="white"
           darkColor="white"
+          value={password}
+          onChangeText={setPassword}
           isPassword
         />
       </View>
-      <AppButton title="Login" />
+      <AppButton title="Login" onPress={handleLogin} loading={isPending} />
       <ThemedText style={styles.or}>Or</ThemedText>
       <AppButton
         icon={<GoogleIcon />}
@@ -142,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

@@ -6,6 +6,8 @@ import AppButton from "@/components/AppButton";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { ThemedView } from "@/components/ThemedView";
+import { setLocalData } from "@/utils/configs/localStorage";
+import storeKeys from "@/utils/constants/storeKeys";
 
 const OnboardingScreen = (): JSX.Element => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -32,16 +34,22 @@ const OnboardingScreen = (): JSX.Element => {
     },
   ];
 
+  const handleComplete = () => {
+    setLocalData(storeKeys.onboarding, "true", () => {
+      router.replace("/RegisterScreen");
+    });
+  };
+
   const handleNext = (): void => {
     if (currentIndex < pages.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      router.replace("/RegisterScreen");
+      handleComplete();
     }
   };
 
   const handleSkip = (): void => {
-    router.replace("/RegisterScreen");
+    handleComplete();
   };
 
   return (
