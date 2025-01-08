@@ -58,13 +58,6 @@ const OnboardingScreen = (): JSX.Element => {
       style={styles.backgroundImage}
     >
       <ThemedView style={styles.overlay}>
-        <ThemedText style={styles.title}>
-          {pages[currentIndex].title}
-        </ThemedText>
-        <ThemedText style={styles.subtitle}>
-          {pages[currentIndex].subtitle}
-        </ThemedText>
-
         <View style={styles.pagination}>
           {pages.map((_, index) => (
             <View
@@ -74,10 +67,14 @@ const OnboardingScreen = (): JSX.Element => {
           ))}
         </View>
 
-        <AppButton
-          title={currentIndex < pages.length - 1 ? "Next" : "Get Started"}
-          onPress={handleNext}
-        />
+        <ThemedText style={styles.title}>
+          {pages[currentIndex].title}
+        </ThemedText>
+        <ThemedText style={styles.subtitle}>
+          {pages[currentIndex].subtitle}
+        </ThemedText>
+
+        <AppButton title="Next" onPress={handleNext} />
         <AppButton
           title="Skip"
           onPress={handleSkip}
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
   },
 
   skipButton: {
-    backgroundColor: "rgba(225, 226, 229, 0.2)",
+    backgroundColor: "#E1E2E533",
     marginTop: Size.calcHeight(20),
   },
 });

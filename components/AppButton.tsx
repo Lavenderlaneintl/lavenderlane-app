@@ -27,6 +27,7 @@ const AppButton = ({
   loading,
   icon,
   secondary,
+  disabled,
 }: AppButtonProps): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const styles = dynamicStyles();
@@ -37,9 +38,15 @@ const AppButton = ({
       onPress={onPress}
       style={[
         styles.button,
-        style,
         Platform.OS === "ios" && { overflow: "visible" },
-        { backgroundColor: !secondary ? "#592E83" : "#F4F4F6" },
+        {
+          backgroundColor: !secondary
+            ? disabled
+              ? "#AF8BEA"
+              : "#592E83"
+            : "#F4F4F6",
+        },
+        style,
       ]}
     >
       {loading ? (

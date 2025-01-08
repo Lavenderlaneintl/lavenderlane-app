@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import {
   StyleSheet,
@@ -6,8 +6,16 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Alert,
 } from "react-native";
+import {
+  exchangeCodeAsync,
+  makeRedirectUri,
+  ResponseType,
+  useAuthRequest,
+} from "expo-auth-session";
+import { showToastable } from "react-native-toastable";
+
+import { useMutation } from "@tanstack/react-query";
 
 import AppButton from "@/components/AppButton";
 import { ThemedText } from "@/components/ThemedText";
@@ -15,19 +23,17 @@ import Size from "@/utils/hooks/useResponsiveSize";
 import CompleteLogo from "@/assets/svgs/CompleteLogo";
 import ThemeInput from "@/components/ThemedInput";
 import GoogleIcon from "@/assets/svgs/GoogleIcon";
-import {
-  makeRedirectUri,
-  ResponseType,
-  useAuthRequest,
-} from "expo-auth-session";
-import { useMutation } from "@tanstack/react-query";
 import { IRegisterPayload } from "@/utils/interfaces/auth.interfaces";
 import { UserLogin } from "@/utils/apis/auth";
-import { showToastable } from "react-native-toastable";
 
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"; // Replace this
+const GOOGLE_CLIENT_ID =
+  "376135191242-3fg6tssgfdornf1r1uslv8c95t6fhlf4.apps.googleusercontent.com";
+// "831387738180-2cr7vli0gfl9bea2m0au3ieqe3ti80mq.apps.googleusercontent.com"; //majeed
 
-const RegisterScreen = (): JSX.Element => {
+const IOS_ID =
+  "376135191242-lj22n8sbh83281b7dp3ojo4oc84o4v4m.apps.googleusercontent.com";
+
+const LoginScreen = (): JSX.Element => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -74,13 +80,46 @@ const RegisterScreen = (): JSX.Element => {
     {
       clientId: GOOGLE_CLIENT_ID,
       redirectUri: makeRedirectUri({
-        scheme: "your-app-scheme", // Optional custom scheme
+        scheme: "lavenderlane",
       }),
       scopes: ["profile", "email"],
-      responseType: ResponseType.Token,
+      responseType: ResponseType.Code,
     },
     discovery
   );
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
+
+      // Exchange the code for an access token
+      exchangeCodeAsync(
+        {
+          code,
+          clientId: IOS_ID,
+          redirectUri: makeRedirectUri({
+            scheme: "lavenderlane",
+          }),
+        },
+        discovery
+      )
+        .then((tokenResponse) => {
+          console.log("Access Token:", tokenResponse.accessToken);
+
+          // Fetch user info
+          fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: { Authorization: `Bearer ${tokenResponse.accessToken}` },
+          })
+            .then((res) => res.json())
+            .then((user) => {
+              // Alert.alert("Welcome", `Hello, ${user.name}!`);
+              console.log("User Info:", user);
+            })
+            .catch((err) => console.error("Failed to fetch user info:", err));
+        })
+        .catch((err) => console.error("Token exchange failed:", err));
+    }
+  }, [response]);
 
   const handleLogin = async () => {
     handleRegisterMutate({
@@ -117,7 +156,12 @@ const RegisterScreen = (): JSX.Element => {
           isPassword
         />
       </View>
-      <AppButton title="Login" onPress={handleLogin} loading={isPending} />
+      <AppButton
+        title="Login"
+        onPress={handleLogin}
+        loading={isPending}
+        disabled={!email || !password}
+      />
       <ThemedText style={styles.or}>Or</ThemedText>
       <AppButton
         icon={<GoogleIcon />}
@@ -169,7 +213,9 @@ const styles = StyleSheet.create({
   },
 
   googleButton: {
-    backgroundColor: "rgba(225, 226, 229, 0.2)",
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#fff",
   },
 
   input: {
@@ -177,4 +223,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default LoginScreen;

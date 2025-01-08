@@ -79,7 +79,7 @@ const InvitePartnerScreen = (): JSX.Element => {
               <Ionicons name="chevron-back-outline" size={24} color="white" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.skipIcon}>
-              <Text>Skip</Text>
+              <Text style={{ color: "rgba(175, 139, 234, 1)" }}>Skip</Text>
             </TouchableOpacity>
           </View>
           <GroupUsers />
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginBottom: Size.calcHeight(100),
+    marginBottom: Size.calcHeight(50),
   },
 
   backIcon: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   skipIcon: {
     width: Size.calcWidth(70),
     height: Size.calcWidth(30),
-    backgroundColor: "#AF8BEA",
+    backgroundColor: "rgba(175, 139, 234, 0.1)",
     borderRadius: Size.calcWidth(10),
     justifyContent: "center",
     alignItems: "center",

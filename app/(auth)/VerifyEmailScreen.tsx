@@ -97,12 +97,13 @@ const VerifyEmailScreen = (): JSX.Element => {
             <Ionicons name="chevron-back-outline" size={24} color="white" />
           </TouchableOpacity>
 
-          <ActivityIndicator
-            style={styles.loader}
-            size={Size.calcAverage(30)}
-            color="#AF8BEA"
-            animating={isLoading}
-          />
+          {isLoading && (
+            <ActivityIndicator
+              style={styles.loader}
+              size={Size.calcAverage(30)}
+              color="#AF8BEA"
+            />
+          )}
 
           <ThemedText type="title" style={{ marginTop: Size.calcHeight(30) }}>
             Check your mail box
@@ -110,16 +111,17 @@ const VerifyEmailScreen = (): JSX.Element => {
           <ThemedText style={styles.note}>
             Kindly enter the 4 digit code sent to your email
           </ThemedText>
-          <TouchableOpacity style={styles.resend}>
-            <ThemedText>
-              Resend code in <Text style={{ color: "#592E83" }}>00:33</Text>
-            </ThemedText>
-          </TouchableOpacity>
+
           <OTPInput
             pin={pin}
             pinLength={pinLength}
             onPinChange={handlePinChange}
           />
+          <TouchableOpacity style={styles.resend}>
+            <ThemedText>
+              Resend code in <Text style={{ color: "#592E83" }}>00:33</Text>
+            </ThemedText>
+          </TouchableOpacity>
           <NumberPad
             onDeletePress={handleDelete}
             onNumberPress={handleKeyPress}

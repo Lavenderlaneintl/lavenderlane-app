@@ -150,6 +150,7 @@ const RegisterScreen = (): JSX.Element => {
         title="Continue"
         onPress={handleRegister}
         loading={isPending}
+        disabled={!email || !password}
       />
       <ThemedText style={styles.or}>Or</ThemedText>
       <AppButton
@@ -206,7 +207,9 @@ const styles = StyleSheet.create({
   },
 
   googleButton: {
-    backgroundColor: "rgba(225, 226, 229, 0.2)",
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#fff",
   },
 
   input: {
