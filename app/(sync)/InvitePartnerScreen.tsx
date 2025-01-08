@@ -17,18 +17,20 @@ import { ThemedText } from "@/components/ThemedText";
 import GroupUsers from "@/assets/svgs/GroupUsers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import AppButton from "@/components/AppButton";
+import DividerWithText from "@/components/TextDivider";
 
 const InvitePartnerScreen = (): JSX.Element => {
   const router = useRouter();
   const partnerName = useLocalSearchParams().partnerName as string;
+  const inviteCode = (useLocalSearchParams().inviteCode as string) ?? "12232";
 
   const handleShareInvite = async () => {
-    const inviteLink = `https://yourapp.com/invite?partnerName=${encodeURIComponent(
+    const inviteLink = `https://lavenderlaneintl.com//invite?partnerName=${encodeURIComponent(
       partnerName
-    )}`;
+    )}&inviteCode=${encodeURIComponent(inviteCode)}`;
     const message = `Hey! Join me on this awesome app. Use the invite link below to get started:\n\n${inviteLink}`;
 
-    const title = "Invite to Our App";
+    const title = "Invite to lavenderlane App";
 
     const shareOptions = Platform.select({
       ios: {
@@ -89,14 +91,7 @@ const InvitePartnerScreen = (): JSX.Element => {
           <ThemedText lightColor="#592E83" darkColor="#AF8BEA" type="subtitle">
             ({partnerName})
           </ThemedText>
-          <ThemedText
-            style={{
-              marginVertical: Size.calcHeight(40),
-              fontSize: Size.calcAverage(20),
-            }}
-          >
-            Using
-          </ThemedText>
+          <DividerWithText text="Using" />
           <AppButton
             style={styles.btn}
             onPress={() => router.push("/DisplayQRCodeScreen")}

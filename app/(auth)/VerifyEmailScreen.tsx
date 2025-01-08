@@ -35,7 +35,7 @@ const VerifyEmailScreen = (): JSX.Element => {
 
     onSuccess: (data) => {
       console.log({ data });
-      router.replace("/WelcomeScreen");
+      router.replace({ pathname: "/WelcomeScreen", params: { email: email } });
 
       setPin([]);
     },

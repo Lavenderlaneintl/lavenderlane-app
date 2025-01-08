@@ -9,28 +9,47 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 
 import Size from "@/utils/hooks/useResponsiveSize";
+import { useMutation } from "@tanstack/react-query";
+import { UpdateProfileByEmail } from "@/utils/apis/user";
 
 const WelcomeScreen = (): JSX.Element => {
+  const email = useLocalSearchParams().email as string;
   const router = useRouter();
+
   const [username, setUsername] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { isPending: isLoading, mutate } = useMutation({
+    mutationFn: UpdateProfileByEmail,
+
+    onSuccess: (data) => {
+      console.log({ data });
+      router.push({
+        pathname: "/InvitePartnerScreen",
+        params: {
+          partnerName: username,
+        },
+      });
+
+      setUsername("");
+    },
+
+    onError: (error: any) => {
+      console.log({ error });
+    },
+  });
 
   const handleNext = () => {
     if (username) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        router.push({
-          pathname: "/InvitePartnerScreen",
-          params: {
-            partnerName: username,
-          },
-        });
-      }, 2000);
+      mutate({
+        email,
+        payload: {
+          endearment: username,
+        },
+      });
     }
   };
 

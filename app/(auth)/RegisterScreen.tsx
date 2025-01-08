@@ -47,7 +47,7 @@ const RegisterScreen = (): JSX.Element => {
       setEmailError("");
       router.push({
         pathname: "/VerifyEmailScreen",
-        params: { email: "email" },
+        params: { email: email },
       });
       setEmail("");
       setPasswordError("");
