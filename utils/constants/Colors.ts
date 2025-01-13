@@ -1,4 +1,5 @@
 import { Theme } from "@react-navigation/native";
+import FontsEnum from "./Fonts";
 
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
@@ -43,19 +44,19 @@ export const LightTheme: Theme = {
   },
   fonts: {
     regular: {
-      fontFamily: "Inter_400Regular",
+      fontFamily: FontsEnum.font400,
       fontWeight: "400",
     },
     medium: {
-      fontFamily: "Inter_500Medium",
+      fontFamily: FontsEnum.font500,
       fontWeight: "500",
     },
     bold: {
-      fontFamily: "PlusJakartaSans_600SemiBold",
+      fontFamily: FontsEnum.font600,
       fontWeight: "600",
     },
     heavy: {
-      fontFamily: "PlusJakartaSans_700Bold",
+      fontFamily: FontsEnum.font700,
       fontWeight: "700",
     },
   },
@@ -73,19 +74,19 @@ export const DarkTheme: Theme = {
   },
   fonts: {
     regular: {
-      fontFamily: "Inter_400Regular",
+      fontFamily: FontsEnum.font400,
       fontWeight: "400",
     },
     medium: {
-      fontFamily: "Inter_500Medium",
+      fontFamily: FontsEnum.font500,
       fontWeight: "500",
     },
     bold: {
-      fontFamily: "PlusJakartaSans_600SemiBold",
+      fontFamily: FontsEnum.font600,
       fontWeight: "600",
     },
     heavy: {
-      fontFamily: "PlusJakartaSans_700Bold",
+      fontFamily: FontsEnum.font700,
       fontWeight: "700",
     },
   },
