@@ -1,10 +1,10 @@
 import {
+  FlatList,
+  Image,
   Platform,
-  Pressable,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
+  TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -12,14 +12,8 @@ import React from "react";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import MovieIcon from "@/assets/svgs/movieicon";
-import GamesIcon from "@/assets/svgs/games";
-import WineGlass from "@/assets/svgs/wineglass";
-import ChitChatIcon from "@/assets/svgs/chitchat";
-import HeartIcon from "@/assets/svgs/heart";
-import ConfettiIcon from "@/assets/svgs/confetti";
-import LavenderIcon from "@/assets/svgs/lavender";
-import HeartBubble from "@/assets/svgs/heartbubble";
+import { exploreFeatures } from "@/utils/data";
+import { router } from "expo-router";
 
 const ExplorePage = () => {
   const { height } = useWindowDimensions();
@@ -41,30 +35,36 @@ const ExplorePage = () => {
                 <ThemedText style={styles.title}>Explore</ThemedText>
               </ThemedView>
 
-              <ScrollView
-                showsVerticalScrollIndicator={false}
+              <FlatList
                 contentContainerStyle={styles.scrollContent}
-              >
-                <View style={styles.featuresWrapper}>
-                  {exploreFeatures.map((feature) => (
-                    <Pressable key={feature.id}>
-                      <ThemedView
-                        style={[
-                          styles.feature,
-                          { backgroundColor: feature.color },
-                        ]}
-                      >
-                        <View>
-                          <feature.icon />
-                        </View>
-                        <ThemedText darkColor="#FFFFFF" style={styles.featuretext}>
-                          {feature.title}
-                        </ThemedText>
-                      </ThemedView>
-                    </Pressable>
-                  ))}
-                </View>
-              </ScrollView>
+                numColumns={2}
+                data={exploreFeatures}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => router.push("/CreateMovieNight")}
+                  >
+                    <ThemedView
+                      style={[styles.feature, { backgroundColor: item.color }]}
+                    >
+                      <Image
+                        source={item.icon}
+                        style={styles.icon}
+                        resizeMode="contain"
+                      />
+
+                      <ThemedText style={styles.featuretext}>
+                        {item.title}
+                      </ThemedText>
+                    </ThemedView>
+                  </TouchableOpacity>
+                )}
+                ItemSeparatorComponent={() => (
+                  <View style={{ height: Size.calcHeight(28) }} />
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                columnWrapperStyle={{ justifyContent: "space-between" }}
+                showsVerticalScrollIndicator={false}
+              />
             </ThemedView>
           </ThemedView>
         </ThemedView>
@@ -134,6 +134,11 @@ const styles = StyleSheet.create({
     padding: Size.calcAverage(20),
   },
 
+  icon: {
+    width: Size.calcWidth(36),
+    height: Size.calcHeight(36),
+  },
+
   feature: {
     alignItems: "center",
     justifyContent: "center",
@@ -148,6 +153,7 @@ const styles = StyleSheet.create({
   featuretext: {
     fontSize: Size.calcWidth(14),
     fontWeight: "semibold",
+    color: "#222B45",
   },
 
   scrollContent: {
@@ -162,58 +168,3 @@ const styles = StyleSheet.create({
     gap: Size.calcWidth(28),
   },
 });
-
-const exploreFeatures = [
-  {
-    id: 1,
-    title: "Movie Night",
-    icon: MovieIcon,
-    color: "#0CBCF233",
-  },
-  {
-    id: 2,
-    title: "Games",
-    icon: GamesIcon,
-    color: "#F700F633",
-  },
-  {
-    id: 3,
-    title: "Date Night",
-    icon: WineGlass,
-    color: "#0911E133",
-  },
-  {
-    id: 4,
-    title: "Chit Chat",
-    icon: ChitChatIcon,
-    color: "#F6BB4233",
-  },
-
-  {
-    id: 5,
-    title: "Intimacy",
-    icon: HeartIcon,
-    color: "#E1160933",
-  },
-
-  {
-    id: 6,
-    title: "Celebration",
-    icon: ConfettiIcon,
-    color: "#AF8BEA33",
-  },
-
-  {
-    id: 7,
-    title: " Love Language",
-    icon: HeartBubble,
-    color: "#33AB3F33",
-  },
-
-  {
-    id: 8,
-    title: "Lavender",
-    icon: LavenderIcon,
-    color: "#592E8333",
-  },
-];

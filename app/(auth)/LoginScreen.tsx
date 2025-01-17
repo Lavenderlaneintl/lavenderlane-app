@@ -48,6 +48,7 @@ const LoginScreen = (): JSX.Element => {
 
     onSuccess: (data) => {
       console.log({ data });
+
       setPassword("");
 
       setEmail("");
