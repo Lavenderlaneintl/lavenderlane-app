@@ -41,7 +41,7 @@ const ExplorePage = () => {
                 data={exploreFeatures}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    onPress={() => router.push("/CreateMovieNight")}
+                    onPress={() => router.push("/(explore)/love-language")}
                   >
                     <ThemedView
                       style={[styles.feature, { backgroundColor: item.color }]}

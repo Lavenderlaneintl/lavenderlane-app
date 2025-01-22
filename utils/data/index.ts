@@ -52,3 +52,32 @@ export const exploreFeatures = [
     color: "#592E8333",
   },
 ];
+
+export const loveLanguages = [
+  {
+    id: 1,
+    title: "Words of affirmation",
+    icon: require("@/assets/images/affirmation.png"),
+  },
+  {
+    id: 2,
+    title: "Physical Touch",
+    icon: require("@/assets/images/physical-touch.png"),
+  },
+  {
+    id: 3,
+    title: "Quality Time",
+    icon: require("@/assets/images/quality-time.png"),
+  },
+  {
+    id: 4,
+    title: "Acts of Service",
+    icon: require("@/assets/images/service.png"),
+  },
+
+  {
+    id: 5,
+    title: "Receiving Gifts",
+    icon: require("@/assets/images/recieve-gifts.png"),
+  },
+];

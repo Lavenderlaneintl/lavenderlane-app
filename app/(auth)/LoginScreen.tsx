@@ -48,7 +48,7 @@ const LoginScreen = (): JSX.Element => {
 
     onSuccess: (data) => {
       console.log({ data });
-
+      router.push("/(explore)/explore");
       setPassword("");
 
       setEmail("");
