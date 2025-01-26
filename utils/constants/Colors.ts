@@ -36,11 +36,11 @@ export const LightTheme: Theme = {
   dark: false,
   colors: {
     background: Colors.light.background,
-    border: "",
-    card: "",
-    notification: "",
+    border: Colors.light.lightGrey,
+    card: Colors.light.background,
+    notification: Colors.light.tint,
     text: Colors.light.text,
-    primary: "#FFA300",
+    primary: Colors.light.primary,
   },
   fonts: {
     regular: {
@@ -66,11 +66,11 @@ export const DarkTheme: Theme = {
   dark: true,
   colors: {
     background: Colors.dark.background,
-    border: "",
-    card: "",
-    notification: "",
+    border: Colors.dark.lightGrey,
+    card: Colors.dark.background,
+    notification: Colors.dark.tint,
     text: Colors.dark.text,
-    primary: "#FF8C00",
+    primary: Colors.dark.primary,
   },
   fonts: {
     regular: {

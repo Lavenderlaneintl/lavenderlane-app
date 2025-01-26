@@ -14,7 +14,12 @@ const MainScreen = (): JSX.Element => {
       try {
         const isOnboard = await getLocalData("isOnboard");
         if (isOnboard) {
-          router.push("/RegisterScreen");
+          const isLogin = await getLocalData("userToken");
+          if (isLogin) {
+            router.push("/DashboardScreen");
+          } else {
+            router.push("/RegisterScreen");
+          }
         } else {
           router.push("/OnboardingScreen");
         }

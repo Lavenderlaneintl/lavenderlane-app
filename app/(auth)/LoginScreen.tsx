@@ -25,6 +25,7 @@ import ThemeInput from "@/components/ThemedInput";
 import GoogleIcon from "@/assets/svgs/GoogleIcon";
 import { IRegisterPayload } from "@/utils/interfaces/auth.interfaces";
 import { UserLogin } from "@/utils/apis/auth";
+import { setLocalData } from "@/utils/configs/localStorage";
 
 const GOOGLE_CLIENT_ID =
   "376135191242-3fg6tssgfdornf1r1uslv8c95t6fhlf4.apps.googleusercontent.com";
@@ -47,11 +48,14 @@ const LoginScreen = (): JSX.Element => {
     mutationFn: (payload: IRegisterPayload) => UserLogin(payload),
 
     onSuccess: (data) => {
-      console.log({ data });
-
-      setPassword("");
-
-      setEmail("");
+      Promise.all([
+        setLocalData("userId", data.id),
+        setLocalData("userToken", data.token),
+      ]).then(() => {
+        setPassword("");
+        setEmail("");
+        router.push("/DashboardScreen");
+      });
     },
 
     onError: (error: any) => {
