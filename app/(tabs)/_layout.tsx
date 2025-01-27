@@ -5,6 +5,8 @@ import LogoIcon from "@/assets/svgs/Logo";
 import Size from "@/utils/hooks/useResponsiveSize";
 import Avatar from "@/components/Avatar";
 import { ThemedView } from "@/components/ThemedView";
+import TabBar from "@/components/navigation/Tabbar";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 export default function TabLayout() {
   return (
@@ -47,30 +49,14 @@ export default function TabLayout() {
         <Tabs
           screenOptions={{
             headerShown: false,
-            tabBarStyle: {
-              backgroundColor: "#EFEEF1",
-              borderTopWidth: 0,
-              elevation: 4,
-              bottom: 40,
-              height: 60,
-              width: "87%",
-              marginHorizontal: "auto",
-              borderRadius: 20,
-            },
-            // tabBarActiveTintColor: "#F9F9F9",
-            // tabBarInactiveTintColor: "#9CA0AF",
-            tabBarLabelStyle: { fontSize: 12 },
-            tabBarIconStyle: { marginBottom: -2 },
             tabBarShowLabel: false,
           }}
+          tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
         >
           <Tabs.Screen
             name="DashboardScreen"
             options={{
               tabBarLabel: "Dashboard",
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="home-outline" color={color} size={size} />
-              ),
             }}
           />
           <Tabs.Screen
