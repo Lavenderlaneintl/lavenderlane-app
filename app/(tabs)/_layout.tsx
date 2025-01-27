@@ -48,14 +48,20 @@ export default function TabLayout() {
           screenOptions={{
             headerShown: false,
             tabBarStyle: {
-              backgroundColor: "#fff",
+              backgroundColor: "#EFEEF1",
               borderTopWidth: 0,
               elevation: 4,
+              bottom: 40,
+              height: 60,
+              width: "87%",
+              marginHorizontal: "auto",
+              borderRadius: 20,
             },
-            tabBarActiveTintColor: "#007AFF",
-            tabBarInactiveTintColor: "#8E8E93",
+            // tabBarActiveTintColor: "#F9F9F9",
+            // tabBarInactiveTintColor: "#9CA0AF",
             tabBarLabelStyle: { fontSize: 12 },
             tabBarIconStyle: { marginBottom: -2 },
+            tabBarShowLabel: false,
           }}
         >
           <Tabs.Screen
@@ -68,9 +74,36 @@ export default function TabLayout() {
             }}
           />
           <Tabs.Screen
+            name="CalenderScreen"
+            options={{
+              tabBarLabel: "Calender",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="compass-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tabs.Screen
             name="ExploreScreen"
             options={{
               tabBarLabel: "Explore",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="compass-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="NotificationScreen"
+            options={{
+              tabBarLabel: "Notification",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="compass-outline" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="SettingsScreen"
+            options={{
+              tabBarLabel: "Settings",
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="compass-outline" color={color} size={size} />
               ),
