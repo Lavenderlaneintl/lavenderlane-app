@@ -20,54 +20,39 @@ const ExplorePage = () => {
 
   return (
     <>
-      {Platform.OS === "ios" && <View style={styles.statusBarBackground} />}
-      <StatusBar
-        translucent
-        barStyle="light-content"
-        backgroundColor={Platform.OS === "android" ? "#AF8BEA" : "transparent"}
-      />
-
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.wrapper}>
-          <ThemedView style={styles.underlay}>
-            <ThemedView style={[styles.overlay, { height: height * 0.85 }]}>
-              <ThemedView style={styles.exploreheader}>
-                <ThemedText style={styles.title}>Explore</ThemedText>
-              </ThemedView>
-
-              <FlatList
-                contentContainerStyle={styles.scrollContent}
-                numColumns={2}
-                data={exploreFeatures}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => router.push(item.route as any)} //modifying this assertion
-                  >
-                    <ThemedView
-                      style={[styles.feature, { backgroundColor: item.color }]}
-                    >
-                      <Image
-                        source={item.icon}
-                        style={styles.icon}
-                        resizeMode="contain"
-                      />
-
-                      <ThemedText style={styles.featuretext}>
-                        {item.title}
-                      </ThemedText>
-                    </ThemedView>
-                  </TouchableOpacity>
-                )}
-                ItemSeparatorComponent={() => (
-                  <View style={{ height: Size.calcHeight(28) }} />
-                )}
-                keyExtractor={(item) => item.id.toString()}
-                columnWrapperStyle={{ justifyContent: "space-between" }}
-                showsVerticalScrollIndicator={false}
-              />
-            </ThemedView>
-          </ThemedView>
+      <ThemedView style={[styles.overlay, { height: height * 0.85 }]}>
+        <ThemedView lightColor="#F9F9F9" style={styles.exploreheader}>
+          <ThemedText type="title" style={styles.title}>Explore</ThemedText>
         </ThemedView>
+
+        <FlatList
+          contentContainerStyle={styles.scrollContent}
+          numColumns={2}
+          data={exploreFeatures}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => router.push(item.route as any)} //modifying this assertion
+            >
+              <ThemedView
+                style={[styles.feature, { backgroundColor: item.color }]}
+              >
+                <Image
+                  source={item.icon}
+                  style={styles.icon}
+                  resizeMode="contain"
+                />
+
+                <ThemedText style={styles.featuretext}>{item.title}</ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
+          )}
+          ItemSeparatorComponent={() => (
+            <View style={{ height: Size.calcHeight(28) }} />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          showsVerticalScrollIndicator={false}
+        />
       </ThemedView>
     </>
   );
@@ -76,61 +61,22 @@ const ExplorePage = () => {
 export default ExplorePage;
 
 const styles = StyleSheet.create({
-  statusBarBackground: {
-    height: StatusBar.currentHeight || 44,
-    backgroundColor: "#AF8BEA",
-  },
-
-  container: {
-    flex: 1,
-    backgroundColor: "#AF8BEA",
-    paddingTop:
-      Platform.OS === "android"
-        ? Size.calcHeight(StatusBar.currentHeight || 50)
-        : Size.calcHeight(20),
-    width: "100%",
-  },
-
-  wrapper: {
-    flex: 1,
-    borderTopLeftRadius: Size.calcWidth(30),
-    borderTopRightRadius: Size.calcWidth(30),
-    paddingTop: Size.calcAverage(20),
-    width: "100%",
-    backgroundColor: "#AF8BEA",
-    alignItems: "center",
-  },
-
   title: {
     fontSize: Size.calcWidth(20),
     fontWeight: "semibold",
     textAlign: "left",
-    color: "#373D51",
-  },
-
-  underlay: {
-    backgroundColor: "#E0DAF2",
-    flex: 1,
-    paddingHorizontal: Size.calcAverage(12),
-    borderTopLeftRadius: Size.calcWidth(30),
-    borderTopRightRadius: Size.calcWidth(30),
-    width: "100%",
   },
 
   overlay: {
-    backgroundColor: "white",
     width: "100%",
     gap: Size.calcHeight(26),
-    borderTopLeftRadius: Size.calcWidth(30),
-    borderTopRightRadius: Size.calcWidth(30),
-    borderBottomLeftRadius: Size.calcWidth(30),
-    borderBottomRightRadius: Size.calcWidth(30),
+    borderTopLeftRadius: Size.calcWidth(24),
+    borderTopRightRadius: Size.calcWidth(24),
+    borderBottomLeftRadius: Size.calcWidth(24),
+    borderBottomRightRadius: Size.calcWidth(24),
   },
 
   exploreheader: {
-    borderTopLeftRadius: Size.calcWidth(30),
-    borderTopRightRadius: Size.calcWidth(30),
-    backgroundColor: "#F9F9F9",
     padding: Size.calcAverage(20),
   },
 
@@ -153,12 +99,11 @@ const styles = StyleSheet.create({
   featuretext: {
     fontSize: Size.calcWidth(14),
     fontWeight: "semibold",
-    color: "#222B45",
   },
 
   scrollContent: {
     paddingHorizontal: Size.calcWidth(20),
-    paddingBottom: Size.calcHeight(20),
+    paddingBottom: Size.calcHeight(150),
   },
 
   featuresWrapper: {
