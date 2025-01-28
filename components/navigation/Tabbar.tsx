@@ -41,16 +41,17 @@ const navItems: tabItemType[] = [
   },
 ];
 
-const TabBar = ({ descriptors, navigation, state }: BottomTabBarProps) => {
+const TabBar = ({ navigation, state }: BottomTabBarProps) => {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
       {navItems.map((tabItem) => {
         const route = state.routes.find((route) => route.name === tabItem.name);
-        const isFocused = route
-          ? descriptors[route.key]?.navigation?.isFocused()
-          : false;
+
+        const isFocused =
+          state.routes[state.index]?.name ===
+          tabItem.name.toString().replace("/", "");
 
         return (
           <TouchableOpacity
