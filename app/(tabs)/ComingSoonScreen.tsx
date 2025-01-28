@@ -1,15 +1,19 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Linking } from "react-native";
 import LottieView from "lottie-react-native";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import AppButton from "@/components/AppButton";
 import Size from "@/utils/hooks/useResponsiveSize";
-import { useRouter } from "expo-router";
 
 const ComingSoonScreen = () => {
-  const router = useRouter();
+  const handleLearnMore = async () => {
+    const url = "https://www.lavenderlaneinternational.com/faq";
+    await Linking.openURL(url).catch((err) =>
+      console.error("An error occurred", err)
+    );
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -28,7 +32,7 @@ const ComingSoonScreen = () => {
         <AppButton
           title="Learn more"
           style={styles.button}
-          onPress={() => router.back()}
+          onPress={handleLearnMore}
         />
       </View>
     </ThemedView>
