@@ -26,7 +26,7 @@ import CheckedIcon from "@/assets/svgs/checked";
 import UncheckedIcon from "@/assets/svgs/unchecked";
 import PlusIcon from "@/assets/svgs/plusicon";
 
-const CreateMovieNight = () => {
+const MovieNightScreen = () => {
   const [selectedBackground, setSelectedBackground] = useState<number | null>(
     null
   );
@@ -310,7 +310,7 @@ const CreateMovieNight = () => {
   );
 };
 
-export default CreateMovieNight;
+export default MovieNightScreen;
 
 const styles = StyleSheet.create({
   statusBarBackground: {

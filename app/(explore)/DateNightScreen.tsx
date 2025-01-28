@@ -26,7 +26,7 @@ import CheckedIcon from "@/assets/svgs/checked";
 import UncheckedIcon from "@/assets/svgs/unchecked";
 import PlusIcon from "@/assets/svgs/plusicon";
 
-const CreateDateNight = () => {
+const DateNightScreen = () => {
   const [selectedBackground, setSelectedBackground] = useState<number | null>(
     null
   );
@@ -310,7 +310,7 @@ const CreateDateNight = () => {
   );
 };
 
-export default CreateDateNight;
+export default DateNightScreen;
 
 const styles = StyleSheet.create({
   statusBarBackground: {

@@ -1,31 +1,33 @@
-export const exploreFeatures = [
+import { IAppFeatures } from "../interfaces/index.interfaces";
+
+export const exploreFeatures: IAppFeatures[] = [
   {
     id: 1,
     title: "Movie Night",
     icon: require("@/assets/images/movies.png"),
     color: "#0CBCF233",
-    route: "/(explore)/CreateMovieNight",
+    route: "/MovieNightScreen",
   },
   {
     id: 2,
     title: "Games",
     icon: require("@/assets/images/games.png"),
     color: "#F700F633",
-    route: "/(explore)/CreateMovieNight",
+    route: "/ComingSoonScreen",
   },
   {
     id: 3,
     title: "Date Night",
     icon: require("@/assets/images/datenight.png"),
     color: "#0911E133",
-    route: "/(explore)/create-date-night",
+    route: "/DateNightScreen",
   },
   {
     id: 4,
     title: "Chit Chat",
     icon: require("@/assets/images/chitchat.png"),
     color: "#F6BB4233",
-    route: "/(explore)/CreateMovieNight",
+    route: "/ComingSoonScreen",
   },
 
   {
@@ -33,7 +35,7 @@ export const exploreFeatures = [
     title: "Intimacy",
     icon: require("@/assets/images/intimacy.png"),
     color: "#E1160933",
-    route: "/(explore)/CreateMovieNight",
+    route: "/ComingSoonScreen",
   },
 
   {
@@ -41,23 +43,23 @@ export const exploreFeatures = [
     title: "Celebration",
     icon: require("@/assets/images/celebration.png"),
     color: "#AF8BEA33",
-    route: "/(explore)/CreateMovieNight",
+    route: "/ComingSoonScreen",
   },
-
-  // {
-  //   id: 7,
-  //   title: " Love Language",
-  //   icon: require("@/assets/images/love-language.png"),
-  //   color: "#33AB3F33",
-  //   route: "/(explore)/love-language"
-  // },
 
   {
     id: 7,
+    title: " Love Language",
+    icon: require("@/assets/images/love-language.png"),
+    color: "#33AB3F33",
+    route: "/LoveLanguageScreen",
+  },
+
+  {
+    id: 8,
     title: "Lavender",
     icon: require("@/assets/images/lavender-purple.png"),
     color: "#592E8333",
-    route: "/(explore)/CreateMovieNight",
+    route: "/ComingSoonScreen",
   },
 ];
 

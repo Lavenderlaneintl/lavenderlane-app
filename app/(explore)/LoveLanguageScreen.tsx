@@ -19,7 +19,7 @@ import { loveLanguages } from "@/utils/data";
 import AppButton from "@/components/AppButton";
 import PlusIcon from "@/assets/svgs/plusicon";
 
-const LoveLanguagePage = (): JSX.Element => {
+const LoveLanguageScreen = (): JSX.Element => {
   return (
     <>
       {/* Background for StatusBar on iOS */}
@@ -70,7 +70,7 @@ const LoveLanguagePage = (): JSX.Element => {
                 data={loveLanguages}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    onPress={() => router.push("/(explore)/love-language")}
+                    onPress={() => router.push("/LoveLanguageScreen")}
                   >
                     <ThemedView style={styles.language}>
                       <View
@@ -113,7 +113,7 @@ const LoveLanguagePage = (): JSX.Element => {
   );
 };
 
-export default LoveLanguagePage;
+export default LoveLanguageScreen;
 
 const styles = StyleSheet.create({
   statusBarBackground: {
