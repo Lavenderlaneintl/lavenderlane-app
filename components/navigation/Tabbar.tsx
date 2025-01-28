@@ -1,5 +1,10 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
@@ -44,24 +49,39 @@ const navItems: tabItemType[] = [
 const TabBar = ({ navigation, state }: BottomTabBarProps) => {
   const router = useRouter();
 
+  // Shared values for animation
+  const scaleValues = navItems.map(() => useSharedValue(1)); // Default scale is 1
+  const backgroundValues = navItems.map(() => useSharedValue("transparent")); // Default background is transparent
+
   return (
     <View style={styles.container}>
-      {navItems.map((tabItem) => {
+      {navItems.map((tabItem, index) => {
         const route = state.routes.find((route) => route.name === tabItem.name);
 
         const isFocused =
           state.routes[state.index]?.name ===
           tabItem.name.toString().replace("/", "");
 
+        // Update shared values based on focus state
+        React.useEffect(() => {
+          scaleValues[index].value = withTiming(isFocused ? 1.2 : 1, {
+            duration: 200,
+          });
+          backgroundValues[index].value = withTiming(
+            isFocused ? "#592E83" : "transparent",
+            { duration: 200 }
+          );
+        }, [isFocused, scaleValues, backgroundValues]);
+
+        // Animated styles
+        const animatedStyle = useAnimatedStyle(() => ({
+          transform: [{ scale: scaleValues[index].value }],
+          backgroundColor: backgroundValues[index].value,
+        }));
+
         return (
           <TouchableOpacity
             key={tabItem.label}
-            style={[
-              styles.tabIcon,
-              isFocused && {
-                backgroundColor: "#592E83",
-              },
-            ].filter(Boolean)}
             onPress={() => {
               const event = navigation.emit({
                 type: "tabPress",
@@ -74,7 +94,9 @@ const TabBar = ({ navigation, state }: BottomTabBarProps) => {
               }
             }}
           >
-            <tabItem.icon iconColor={isFocused ? "#F9F9F9" : "#9CA0AF"} />
+            <Animated.View style={[styles.tabIcon, animatedStyle]}>
+              <tabItem.icon iconColor={isFocused ? "#F9F9F9" : "#9CA0AF"} />
+            </Animated.View>
           </TouchableOpacity>
         );
       })}
@@ -88,22 +110,23 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#EFEEF1",
     borderTopWidth: 0,
-    elevation: 4,
-    bottom: 40,
-    height: Size.calcHeight(70),
+    elevation: 2,
+    bottom: Size.calcHeight(25),
+    height: Size.calcHeight(72),
     width: "87%",
     marginHorizontal: "auto",
-    borderRadius: 30,
+    borderRadius: Size.calcAverage(40),
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    paddingHorizontal: Size.calcWidth(10),
   },
 
   tabIcon: {
-    width: Size.calcAverage(55),
-    height: Size.calcAverage(55),
+    width: Size.calcAverage(50),
+    height: Size.calcAverage(50),
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: Size.calcAverage(40),
+    borderRadius: Size.calcAverage(50),
   },
 });

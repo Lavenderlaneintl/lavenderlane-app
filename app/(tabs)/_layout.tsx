@@ -50,6 +50,7 @@ export default function TabLayout() {
           screenOptions={{
             headerShown: false,
             tabBarShowLabel: false,
+            animation: "shift",
           }}
           tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
         >
