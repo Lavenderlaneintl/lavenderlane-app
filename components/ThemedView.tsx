@@ -15,7 +15,14 @@ export function ThemedView({
   scrollable,
   ...otherProps
 }: ThemedViewProps) {
-  const backgroundColor = useThemeColor({ colorName: "background" });
+  const themeColor = useThemeColor({ colorName: "background" });
+  const backgroundColor =
+    lightColor || darkColor
+      ? useThemeColor({
+          colorName: "background",
+          props: { light: lightColor, dark: darkColor },
+        })
+      : themeColor;
 
   return scrollable ? (
     <ScrollView style={[{ backgroundColor }, style]} {...otherProps} />

@@ -17,6 +17,7 @@ export const Colors = {
     lightGrey: "#E0E0E0",
     darkGrey: "#A0A0A0",
     whiteColor,
+    card: "#F4F4F6",
   },
   dark: {
     text: "#ECEDEE",
@@ -28,6 +29,7 @@ export const Colors = {
     primary: "#FF8C00",
     lightGrey: "#3A3A3A",
     darkGrey: "#4A4A4A",
+    card: "#373D51",
     whiteColor,
   },
 };
@@ -37,7 +39,7 @@ export const LightTheme: Theme = {
   colors: {
     background: Colors.light.background,
     border: Colors.light.lightGrey,
-    card: Colors.light.background,
+    card: Colors.light.card,
     notification: Colors.light.tint,
     text: Colors.light.text,
     primary: Colors.light.primary,
@@ -67,7 +69,7 @@ export const DarkTheme: Theme = {
   colors: {
     background: Colors.dark.background,
     border: Colors.dark.lightGrey,
-    card: Colors.dark.background,
+    card: Colors.dark.card,
     notification: Colors.dark.tint,
     text: Colors.dark.text,
     primary: Colors.dark.primary,

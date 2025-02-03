@@ -12,122 +12,99 @@ import { ThemedView } from "@/components/ThemedView";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import HeartBubble from "@/assets/svgs/heartbubble";
 import { ThemedText } from "@/components/ThemedText";
 import { FlatList } from "react-native";
-import { loveLanguages } from "@/utils/data";
-import AppButton from "@/components/AppButton";
-import PlusIcon from "@/assets/svgs/plusicon";
+import { chitchatOptions } from "@/utils/data";
+import { useThemeColor } from "@/utils/hooks/useThemeColor";
 
 const ChitChatScreen = (): JSX.Element => {
+  const cardColor = useThemeColor({ colorName: "card" });
+
   return (
-    <>
-      {/* Background for StatusBar on iOS */}
-      {Platform.OS === "ios" && <View style={styles.statusBarBackground} />}
-      <StatusBar
-        translucent
-        barStyle="light-content"
-        backgroundColor={Platform.OS === "android" ? "#AF8BEA" : "transparent"}
-      />
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.wrapper}>
-          <View style={[{ gap: Size.calcHeight(20) }]}>
-            <View style={styles.header}>
-              <TouchableOpacity
-                style={styles.backIcon}
-                onPress={() => router.back()}
-              >
-                <Ionicons name="chevron-back-outline" size={24} color="white" />
-              </TouchableOpacity>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.wrapper}>
+        <View style={[{ gap: Size.calcHeight(20) }]}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backIcon}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="chevron-back-outline" size={24} color="white" />
+            </TouchableOpacity>
 
-              <ThemedView style={styles.header}>
-                <HeartBubble />
-                <ThemedText style={styles.headerTitle}>
-                  Love Language
-                </ThemedText>
-              </ThemedView>
-            </View>
-
-            <ThemedView style={[{ gap: Size.calcHeight(25) }]}>
-              <View style={{ gap: Size.calcHeight(6) }}>
-                <ThemedText
-                  style={{ fontWeight: "600", fontSize: Size.calcWidth(24) }}
-                >
-                  Choose your love language
-                </ThemedText>
-                <ThemedText
-                  style={{
-                    fontWeight: "500",
-                    color: "#9CA0AF",
-                    fontSize: Size.calcWidth(14),
-                  }}
-                >
-                  You can select more than one
-                </ThemedText>
-              </View>
-
-              <FlatList
-                data={loveLanguages}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => router.push("/ChitChatScreen")}
-                  >
-                    <ThemedView style={styles.language}>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: Size.calcWidth(11),
-                        }}
-                      >
-                        <Image
-                          source={item.icon}
-                          style={styles.icon}
-                          resizeMode="contain"
-                        />
-
-                        <ThemedText style={styles.featuretext}>
-                          {item.title}
-                        </ThemedText>
-                      </View>
-                    </ThemedView>
-                  </TouchableOpacity>
-                )}
-                ItemSeparatorComponent={() => (
-                  <View style={{ height: Size.calcHeight(28) }} />
-                )}
-                keyExtractor={(item) => item.id.toString()}
-                showsVerticalScrollIndicator={false}
-              />
+            <ThemedView style={styles.header}>
+              <ThemedText style={styles.headerTitle}>Chit-Chat</ThemedText>
             </ThemedView>
           </View>
 
-          <TouchableOpacity style={styles.addButton}>
-            <PlusIcon />
-          </TouchableOpacity>
+          <ThemedView
+            style={[
+              { gap: Size.calcHeight(10), marginTop: Size.calcHeight(20) },
+            ]}
+          >
+            <FlatList
+              data={chitchatOptions}
+              renderItem={({ item }) => (
+                <TouchableOpacity>
+                  <ThemedView
+                    style={[styles.language, { backgroundColor: cardColor }]}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: Size.calcWidth(15),
+                      }}
+                    >
+                      <Image
+                        source={item.icon}
+                        style={styles.icon}
+                        resizeMode="contain"
+                      />
 
-          <AppButton title="Save" disabled />
-        </ThemedView>
+                      <View>
+                        <ThemedText
+                          style={[
+                            styles.featuretext,
+                            { fontSize: Size.calcAverage(19) },
+                          ]}
+                          lightColor="#373D51"
+                        >
+                          {item.title}
+                        </ThemedText>
+                        <ThemedText
+                          style={styles.featuretext}
+                          lightColor="#373D51"
+                        >
+                          {item.description}
+                        </ThemedText>
+                      </View>
+                    </View>
+                  </ThemedView>
+                </TouchableOpacity>
+              )}
+              ItemSeparatorComponent={() => (
+                <View style={{ height: Size.calcHeight(20) }} />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+            />
+          </ThemedView>
+        </View>
       </ThemedView>
-    </>
+    </ThemedView>
   );
 };
 
 export default ChitChatScreen;
 
 const styles = StyleSheet.create({
-  statusBarBackground: {
-    height: StatusBar.currentHeight || 44,
-    backgroundColor: "#AF8BEA",
-  },
-
   container: {
     flex: 1,
     backgroundColor: "#AF8BEA",
-    paddingTop:
-      Platform.OS === "android"
-        ? Size.calcHeight(StatusBar.currentHeight || 50)
-        : Size.calcHeight(20),
+    paddingTop: Size.calcHeight(
+      StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 60
+    ),
   },
 
   wrapper: {
@@ -157,7 +134,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: 15,
   },
 
   note: {
@@ -187,7 +164,6 @@ const styles = StyleSheet.create({
   featuretext: {
     fontSize: Size.calcWidth(14),
     fontWeight: "semibold",
-    color: "#373D51",
   },
 
   icon: {
@@ -199,7 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: Size.calcWidth(15),
     width: "100%",
-    backgroundColor: "#F4F4F6",
     borderRadius: Size.calcWidth(16),
   },
 

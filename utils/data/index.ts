@@ -1,4 +1,4 @@
-import { IAppFeatures } from "../interfaces/index.interfaces";
+import { IAppFeatures, IChitChatOptions } from "../interfaces/index.interfaces";
 
 export const exploreFeatures: IAppFeatures[] = [
   {
@@ -27,7 +27,7 @@ export const exploreFeatures: IAppFeatures[] = [
     title: "Chit Chat",
     icon: require("@/assets/images/chitchat.png"),
     color: "#F6BB4233",
-    route: "/ComingSoonScreen",
+    route: "/ChitChatScreen",
   },
 
   {
@@ -117,5 +117,20 @@ export const customBackgrounds = [
   {
     id: "add",
     isButton: true,
+  },
+];
+
+export const chitchatOptions: IChitChatOptions[] = [
+  {
+    id: 1,
+    title: "Sensitive Talk",
+    description: "Talk about pressing issues",
+    icon: require("@/assets/images/affirmation.png"),
+  },
+  {
+    id: 2,
+    title: "Uninterrupted Gist",
+    description: "Tell your partner everything...",
+    icon: require("@/assets/images/physical-touch.png"),
   },
 ];

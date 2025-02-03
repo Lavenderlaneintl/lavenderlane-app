@@ -7,3 +7,10 @@ export interface IAppFeatures {
   color: string;
   route: Href;
 }
+
+export interface IChitChatOptions {
+  id: number;
+  title: string;
+  description: string;
+  icon: any;
+}
