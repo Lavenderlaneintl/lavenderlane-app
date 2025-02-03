@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Image,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -8,7 +7,7 @@ import {
   FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -22,12 +21,13 @@ const ChitChatScreen = (): JSX.Element => {
   const router = useRouter();
 
   const renderItem = ({ item }: { item: IChitChatOptions }) => (
-    <TouchableOpacity
-      onPress={() => router.push("/ChitChatScreen/UninterruptedGistScreen")}
-    >
+    <TouchableOpacity onPress={() => router.push(item.route)}>
       <ThemedView style={[styles.language, { backgroundColor: cardColor }]}>
         <View style={styles.itemContainer}>
-          <Image source={item.icon} style={styles.icon} resizeMode="contain" />
+          <item.icon
+            style={styles.icon}
+            iconColor={item.id === 1 ? "#F700F6" : "#0CBCF2"}
+          />
           <View>
             <ThemedText
               style={[styles.featureText, { fontSize: Size.calcAverage(19) }]}

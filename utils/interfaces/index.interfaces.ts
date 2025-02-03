@@ -1,3 +1,4 @@
+import { IChatBubbleProps } from "@/assets/svgs/ChatBubble";
 import { Href } from "expo-router";
 
 export interface IAppFeatures {
@@ -12,5 +13,6 @@ export interface IChitChatOptions {
   id: number;
   title: string;
   description: string;
-  icon: any;
+  icon: ({ iconColor, ...props }: IChatBubbleProps) => React.JSX.Element;
+  route: Href;
 }

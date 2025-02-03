@@ -1,3 +1,4 @@
+import ChatBubble from "@/assets/svgs/ChatBubble";
 import { IAppFeatures, IChitChatOptions } from "../interfaces/index.interfaces";
 
 export const exploreFeatures: IAppFeatures[] = [
@@ -125,12 +126,14 @@ export const chitchatOptions: IChitChatOptions[] = [
     id: 1,
     title: "Sensitive Talk",
     description: "Talk about pressing issues",
-    icon: require("@/assets/images/affirmation.png"),
+    icon: ChatBubble,
+    route: "/ChitChatScreen/SensitiveTalkScreen",
   },
   {
     id: 2,
     title: "Uninterrupted Gist",
     description: "Tell your partner everything...",
-    icon: require("@/assets/images/physical-touch.png"),
+    icon: ChatBubble,
+    route: "/ChitChatScreen/UninterruptedGistScreen",
   },
 ];
