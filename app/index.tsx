@@ -9,6 +9,7 @@ import { getLocalData } from "@/utils/configs/localStorage";
 const MainScreen = (): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const router = useRouter();
+
   useEffect(() => {
     const checkOnboard = async () => {
       try {
