@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
 
   texts: {
-    fontSize: Size.calcWidth(18),
+    fontSize: Size.calcWidth(16),
     textAlign: "center",
     color: "#9CA0AF",
   },
