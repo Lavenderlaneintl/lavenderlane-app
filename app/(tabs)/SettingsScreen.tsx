@@ -1,8 +1,10 @@
 import CustomSwitch from "@/components/AppSwitch";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { settingsOptions } from "@/utils/data";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import {
   FlatList,
@@ -24,15 +26,18 @@ const SettingsScreen = () => {
 
       <ThemedView style={{ padding: Size.calcWidth(20) }}>
         <FlatList
-          data={options}
+          data={settingsOptions}
+          keyExtractor={(item) => item.title}
           ItemSeparatorComponent={() => (
             <View style={{ height: Size.calcHeight(13) }} />
           )}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => item.link && router.push(item.link as any)}
+            >
               {" "}
-              <ThemedView style={styles.option}>
+              <ThemedView lightColor="#F4F4F6" style={styles.option}>
                 <View
                   style={{
                     flexDirection: "row",
@@ -130,49 +135,3 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
   },
 });
-
-const options = [
-  {
-    title: "Profile",
-    subtitle: "Edit your profile",
-    icon: require("@/assets/images/blue-chat.png"),
-    toggle: false,
-    comingSoon: false,
-  },
-  {
-    title: "Flirt message secret code",
-    subtitle: "Change your secret code to...",
-    icon: require("@/assets/images/blue-chat.png"),
-    toggle: false,
-    comingSoon: false,
-  },
-  {
-    title: "Reset Password",
-    subtitle: "Reset your password..",
-    icon: require("@/assets/images/blue-chat.png"),
-    toggle: false,
-    comingSoon: false,
-  },
-  {
-    title: "Dark Mode",
-    subtitle: "Change the app theme ",
-    icon: require("@/assets/images/pink-chat.png"),
-    toggle: true,
-    comingSoon: true,
-  },
-  {
-    title: "Disconnect with partner",
-    subtitle: "Disconnect with your partner...",
-    icon: require("@/assets/images/pink-chat.png"),
-    toggle: false,
-    comingSoon: false,
-  },
-
-  {
-    title: "Log out",
-    subtitle: "Logout from the app",
-    icon: require("@/assets/images/pink-chat.png"),
-    toggle: false,
-    comingSoon: false,
-  },
-];
