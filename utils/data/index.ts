@@ -117,3 +117,57 @@ export const customBackgrounds = [
     isButton: true,
   },
 ];
+
+export const settingsOptions = [
+  {
+    title: "Profile",
+    link: "/(settings)/profile",
+    subtitle: "Edit your profile",
+    icon: require("@/assets/images/blue-chat.png"),
+    toggle: false,
+    comingSoon: false,
+  },
+  
+  {
+    title: "Flirt message secret code",
+    subtitle: "Change your secret code to...",
+    link: "/(settings)/FlirtMessageSecretCode",
+    icon: require("@/assets/images/blue-chat.png"),
+    toggle: false,
+    comingSoon: false,
+  },
+
+  {
+    title: "Reset Password",
+    subtitle: "Reset your password..",
+    link: "/(settings)/reset-password",
+    icon: require("@/assets/images/blue-chat.png"),
+    toggle: false,
+    comingSoon: false,
+  },
+
+  {
+    title: "Dark Mode",
+    subtitle: "Change the app theme ",
+    icon: require("@/assets/images/pink-chat.png"),
+    toggle: true,
+    comingSoon: true,
+  },
+
+  {
+    title: "Disconnect with partner",
+    link: "/(settings)/disconnect-with-partner",
+    subtitle: "Disconnect with your partner...",
+    icon: require("@/assets/images/pink-chat.png"),
+    toggle: false,
+    comingSoon: false,
+  },
+
+  {
+    title: "Log out",
+    subtitle: "Logout from the app",
+    icon: require("@/assets/images/pink-chat.png"),
+    toggle: false,
+    comingSoon: false,
+  },
+];

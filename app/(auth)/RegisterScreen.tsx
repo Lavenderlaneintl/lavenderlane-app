@@ -122,7 +122,7 @@ const RegisterScreen = (): JSX.Element => {
       style={styles.backgroundImage}
     >
       <CompleteLogo />
-      <ThemedText style={[styles.texts, { marginTop: Size.calcHeight(40) }]}>
+      <ThemedText style={[styles.texts, { marginTop: Size.calcHeight(60) }]}>
         Create an account and get started
       </ThemedText>
       <View style={{ marginBottom: Size.calcHeight(20), width: "100%" }}>
@@ -164,18 +164,29 @@ const RegisterScreen = (): JSX.Element => {
         style={{ marginTop: Size.calcHeight(20), flexDirection: "row" }}
         onPress={() => router.push("/LoginScreen")}
       >
-        <Text style={styles.texts}>Already have an account?</Text>
+        <Text style={[styles.texts, { fontSize: Size.calcWidth(16) }]}>
+          Already have an account?
+        </Text>
         <Text
           style={[
             styles.texts,
-            { color: "#592E83", marginLeft: Size.calcWidth(7) },
+            {
+              color: "#592E83",
+              marginLeft: Size.calcWidth(7),
+              fontSize: Size.calcWidth(16),
+            },
           ]}
         >
           Login
         </Text>
       </TouchableOpacity>
 
-      <Text style={[styles.texts, { marginTop: Size.calcHeight(20) }]}>
+      <Text
+        style={[
+          styles.texts,
+          { marginTop: Size.calcHeight(20), fontSize: Size.calcWidth(16) },
+        ]}
+      >
         By Signing up , you agree to our Terms of Service and Privacy Policy
       </Text>
     </ImageBackground>
@@ -192,7 +203,7 @@ const styles = StyleSheet.create({
   },
 
   texts: {
-    fontSize: Size.calcWidth(18),
+    fontSize: Size.calcWidth(16),
     textAlign: "center",
     color: "#9CA0AF",
   },
