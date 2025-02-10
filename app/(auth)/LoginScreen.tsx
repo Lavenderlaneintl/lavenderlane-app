@@ -175,7 +175,7 @@ const LoginScreen = (): JSX.Element => {
         disabled={!request}
       />
       <TouchableOpacity
-        style={{ marginTop: Size.calcHeight(20), flexDirection: "row" }}
+        style={{ marginBottom: Size.calcHeight(20), flexDirection: "row" }}
         onPress={() => router.push("/RegisterScreen")}
       >
         <Text style={styles.texts}>Don't have an account?</Text>
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
 
   texts: {
-    fontSize: Size.calcWidth(16),
+    fontSize: Size.calcWidth(14),
     textAlign: "center",
     color: "#9CA0AF",
   },

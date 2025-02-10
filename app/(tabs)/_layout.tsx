@@ -61,15 +61,6 @@ export default function TabLayout() {
             }}
           />
           <Tabs.Screen
-            name="CalenderScreen"
-            options={{
-              tabBarLabel: "Calender",
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="compass-outline" color={color} size={size} />
-              ),
-            }}
-          />
-          <Tabs.Screen
             name="ExploreScreen"
             options={{
               tabBarLabel: "Explore",

@@ -36,7 +36,7 @@ export const exploreFeatures: IAppFeatures[] = [
     title: "Intimacy",
     icon: require("@/assets/images/intimacy.png"),
     color: "#E1160933",
-    route: "/ComingSoonScreen",
+    route: "/IntimacyScreen",
   },
 
   {
@@ -189,5 +189,22 @@ export const settingsOptions = [
     icon: require("@/assets/images/pink-chat.png"),
     toggle: false,
     comingSoon: false,
+  },
+];
+
+export const intimacyOptions: IChitChatOptions[] = [
+  {
+    id: 1,
+    title: "Flirt Messages",
+    description: "Right here you flirt with your...",
+    icon: ChatBubble,
+    route: "/IntimacyScreen/FlirtMessagesScreen",
+  },
+  {
+    id: 2,
+    title: "Dare",
+    description: "Play a dare game",
+    icon: ChatBubble,
+    route: "/ComingSoonScreen",
   },
 ];

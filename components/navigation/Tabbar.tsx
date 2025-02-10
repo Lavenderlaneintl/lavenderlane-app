@@ -12,7 +12,6 @@ import { tabItemType } from "@/utils/interfaces/nav.interfaces";
 import Size from "@/utils/hooks/useResponsiveSize";
 
 import HomeIcon from "./Icons/HomeIcon";
-import CalenderIcon from "./Icons/CalenderIcon";
 import ExploreIcon from "./Icons/ExploreIcon";
 import NotificationIcon from "./Icons/NotificationIcon";
 import SettingsIcon from "./Icons/SettingsIcon";
@@ -24,11 +23,11 @@ const navItems: tabItemType[] = [
     icon: HomeIcon,
     label: "Dashboard",
   },
-  {
-    name: "/CalenderScreen",
-    icon: CalenderIcon,
-    label: "Calendar",
-  },
+  // {
+  //   name: "/CalenderScreen",
+  //   icon: CalenderIcon,
+  //   label: "Calendar",
+  // },
   {
     name: "/ExploreScreen",
     icon: ExploreIcon,

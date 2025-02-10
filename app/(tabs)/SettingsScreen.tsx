@@ -2,6 +2,7 @@ import CustomSwitch from "@/components/AppSwitch";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { settingsOptions } from "@/utils/data";
+import useLogout from "@/utils/hooks/useLogout";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -16,6 +17,8 @@ import {
 } from "react-native";
 
 const SettingsScreen = () => {
+  const logout = useLogout();
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <ThemedView lightColor="#F9F9F9" style={styles.exploreheader}>
@@ -24,7 +27,11 @@ const SettingsScreen = () => {
         </ThemedText>
       </ThemedView>
 
-      <ThemedView style={{ padding: Size.calcWidth(20) }}>
+      <ThemedView
+        style={{
+          padding: Size.calcWidth(20),
+        }}
+      >
         <FlatList
           data={settingsOptions}
           keyExtractor={(item) => item.title}
@@ -34,9 +41,12 @@ const SettingsScreen = () => {
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => item.link && router.push(item.link as any)}
+              onPress={() =>
+                !item.title.includes("Log out")
+                  ? item.link && router.push(item.link as any)
+                  : logout()
+              }
             >
-              {" "}
               <ThemedView lightColor="#F4F4F6" style={styles.option}>
                 <View
                   style={{
@@ -74,17 +84,21 @@ const SettingsScreen = () => {
                   </View>
                 </View>
 
-                {item.toggle ? (
-                  <CustomSwitch value={false} onValueChange={() => {}} />
-                ) : (
-                  <Ionicons
-                    name="chevron-forward-outline"
-                    color={`#49536E`}
-                    size={Size.calcWidth(28)}
-                  />
-                )}
+                {!item.title.includes("Log out") &&
+                  (item.toggle ? (
+                    <CustomSwitch value={false} onValueChange={() => {}} />
+                  ) : (
+                    <Ionicons
+                      name="chevron-forward-outline"
+                      color={`#49536E`}
+                      size={Size.calcWidth(28)}
+                    />
+                  ))}
               </ThemedView>
             </TouchableOpacity>
+          )}
+          ListFooterComponent={() => (
+            <View style={{ height: Size.calcHeight(100) }} />
           )}
         />
       </ThemedView>

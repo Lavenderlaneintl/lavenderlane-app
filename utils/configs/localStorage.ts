@@ -45,7 +45,7 @@ export const getAllLocalData = async (): Promise<{
  */
 export const clearAllLocalData = async (): Promise<void> => {
   try {
-    await AsyncStorage.multiRemove(["user", "user_id", "token", "res"]);
+    await AsyncStorage.multiRemove(["userData", "userId", "userToken", "res"]);
   } catch (error) {
     console.error("Error clearing all local data:", error);
   }
