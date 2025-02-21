@@ -25,7 +25,7 @@ import ThemeInput from "@/components/ThemedInput";
 import GoogleIcon from "@/assets/svgs/GoogleIcon";
 import { IRegisterPayload } from "@/utils/interfaces/auth.interfaces";
 import { UserLogin } from "@/utils/apis/auth";
-import { setLocalData } from "@/utils/configs/localStorage";
+import { useUserStore } from "@/utils/store/userStore";
 
 const GOOGLE_CLIENT_ID =
   "376135191242-3fg6tssgfdornf1r1uslv8c95t6fhlf4.apps.googleusercontent.com";
@@ -36,6 +36,7 @@ const IOS_ID =
 
 const LoginScreen = (): JSX.Element => {
   const router = useRouter();
+  const { setAuthData } = useUserStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,8 +50,10 @@ const LoginScreen = (): JSX.Element => {
 
     onSuccess: (data) => {
       Promise.all([
-        setLocalData("userId", data.id),
-        setLocalData("userToken", data.token),
+        setAuthData({
+          id: data?.id,
+          token: data?.token,
+        }),
       ]).then(() => {
         setPassword("");
         setEmail("");

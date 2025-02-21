@@ -1,37 +1,29 @@
 import React, { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
-
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
 import Size from "@/utils/hooks/useResponsiveSize";
-import { getLocalData } from "@/utils/configs/localStorage";
+import { useUserStore } from "@/utils/store/userStore";
+import { useSettingsStore } from "@/utils/store/settingStore";
 
 const MainScreen = (): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const router = useRouter();
 
-  useEffect(() => {
-    const checkOnboard = async () => {
-      try {
-        const isOnboard = await getLocalData("isOnboard");
-        if (isOnboard) {
-          const isLogin = await getLocalData("userToken");
-          if (isLogin) {
-            router.push("/DashboardScreen");
-          } else {
-            router.push("/RegisterScreen");
-          }
-        } else {
-          router.push("/OnboardingScreen");
-        }
-      } catch (error) {
-        console.error("Error checking onboarding status:", error);
-        // Handle error if needed
-      }
-    };
+  const { authData } = useUserStore();
+  const { isOnboarded } = useSettingsStore();
 
-    checkOnboard();
-  }, []);
+  useEffect(() => {
+    if (isOnboarded) {
+      if (authData) {
+        router.replace("/DashboardScreen");
+      } else {
+        router.replace("/RegisterScreen");
+      }
+    } else {
+      router.replace("/OnboardingScreen");
+    }
+  }, [isOnboarded, authData]);
 
   return (
     <View style={styles.container}>

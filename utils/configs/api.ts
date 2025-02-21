@@ -1,9 +1,10 @@
 import axios from "axios";
-import { getLocalData } from "./localStorage";
+import { useUserStore } from "../store/userStore";
 
 const BASE_URL = "https://lavenderlaneint.onrender.com";
 
-const token = getLocalData("authToken");
+const { authData } = useUserStore();
+const token = authData?.token;
 
 // Create an Axios instance
 const apiClient = axios.create({
