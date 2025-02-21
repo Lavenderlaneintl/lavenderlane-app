@@ -5,7 +5,7 @@ import { IUserPayload } from "../interfaces/user.interfaces";
 import { IAuthData } from "../interfaces/auth.interfaces";
 import STORE_KEYS from "../constants/storeKeys";
 
-type UserState = {
+export type UserStateType = {
   user: IUserPayload | null;
   authData: IAuthData | null;
   setUser: (user: IUserPayload) => void;
@@ -13,7 +13,7 @@ type UserState = {
   clearUser: () => void;
 };
 
-export const useUserStore = create<UserState>()(
+export const useUserStore = create<UserStateType>()(
   persist(
     (set) => ({
       user: null,

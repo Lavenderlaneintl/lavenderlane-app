@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
@@ -13,7 +13,22 @@ const MainScreen = (): JSX.Element => {
   const { authData } = useUserStore();
   const { isOnboarded } = useSettingsStore();
 
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
+    const initialize = async () => {
+      // Wait a short delay to ensure hydration
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      setIsReady(true);
+    };
+
+    initialize();
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) return; // Ensure Zustand is ready before navigating
+
     if (isOnboarded) {
       if (authData) {
         router.replace("/DashboardScreen");
@@ -23,7 +38,7 @@ const MainScreen = (): JSX.Element => {
     } else {
       router.replace("/OnboardingScreen");
     }
-  }, [isOnboarded, authData]);
+  }, [isOnboarded, authData, isReady]);
 
   return (
     <View style={styles.container}>
@@ -36,8 +51,6 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 0,
-    position: "relative",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
