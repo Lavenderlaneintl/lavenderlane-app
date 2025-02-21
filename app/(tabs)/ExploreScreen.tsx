@@ -44,7 +44,7 @@ const ExplorePage = () => {
           <View style={{ height: Size.calcHeight(28) }} />
         )}
         keyExtractor={(item) => item.id.toString()}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
+        columnWrapperStyle={{ gap: Size.calcWidth(28), justifyContent: "space-between" }}
         showsVerticalScrollIndicator={false}
       />
     </ThemedView>

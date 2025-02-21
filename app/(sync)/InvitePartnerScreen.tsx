@@ -80,7 +80,7 @@ const InvitePartnerScreen = (): JSX.Element => {
             >
               <Ionicons name="chevron-back-outline" size={24} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.skipIcon}>
+            <TouchableOpacity onPress={()=> router.push("/DashboardScreen")} style={styles.skipIcon}>
               <Text style={{ color: "rgba(175, 139, 234, 1)" }}>Skip</Text>
             </TouchableOpacity>
           </View>

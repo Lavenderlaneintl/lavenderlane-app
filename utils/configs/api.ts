@@ -3,7 +3,7 @@ import { getLocalData } from "./localStorage";
 
 const BASE_URL = "https://lavenderlaneint.onrender.com";
 
-const token = getLocalData("authToken");
+const token = getLocalData("userToken");
 
 // Create an Axios instance
 const apiClient = axios.create({
@@ -17,9 +17,10 @@ const apiClient = axios.create({
 // token interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcyY2M4Njk0LTk0MTUtNDEzMS1hMmYwLWMyMmI0YTZlZjNiMCIsImlhdCI6MTczOTkyMzgyMCwiZXhwIjoxNzQwMDEwMjIwfQ.Y4OpLowJ4SSxpWqc6uNTDSRvNTXydNlBbt46bmMQCAU`;
+    // if (token) {
+    //   config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcyY2M4Njk0LTk0MTUtNDEzMS1hMmYwLWMyMmI0YTZlZjNiMCIsImlhdCI6MTczOTQ5MTQ4NiwiZXhwIjoxNzM5NTc3ODg2fQ.5Deo0__HIYfyvtcnaVP4M9p0yWzq0IDfyhRV4wT-igE0`;
+    // }
 
     return config;
   },

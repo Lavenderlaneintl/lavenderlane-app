@@ -1,0 +1,46 @@
+export interface EventsData {
+  id: string;
+  createdBy: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+    password: string;
+    inSync: boolean;
+    syncId: string;
+    syncedWith: string;
+    username: string | null;
+    sharedRef: string;
+    coupleId: string;
+    endearment: string;
+    gender: string | null;
+    phoneNumber: string | null;
+    imageUrl: string | null;
+    imagePublicId: string | null;
+    isVerified: boolean;
+    loginDevice: string | null;
+    lastLogin: string | null;
+    reference: string;
+    code: string;
+    isActive: boolean;
+    enable2fa: boolean;
+    signUpMode: string | null;
+    googleProfileId: string | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  };
+  partnerId: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  coupleId: string;
+  bgImageUrl: string | null;
+  bgImagePublicId: string | null;
+  reminder: boolean;
+  eventType: "movieNight" | "dateNight";
+  eventUniqueId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

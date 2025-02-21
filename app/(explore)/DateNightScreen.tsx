@@ -25,6 +25,9 @@ import { customBackgrounds } from "@/utils/data";
 import CheckedIcon from "@/assets/svgs/checked";
 import UncheckedIcon from "@/assets/svgs/unchecked";
 import PlusIcon from "@/assets/svgs/plusicon";
+import { useMutation } from "@tanstack/react-query";
+import { CreateEvent } from "@/utils/apis/events";
+import { showToastable } from "react-native-toastable";
 
 const DateNightScreen = () => {
   const [selectedBackground, setSelectedBackground] = useState<number | null>(
@@ -33,13 +36,100 @@ const DateNightScreen = () => {
 
   const [backgrounds, setCustomBackgrounds] = useState(customBackgrounds);
 
-  const [selectedDate, setSelectedDate] = useState("");
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [reminder, setReminder] = useState(false);
+
+  const [errors, setErrors] = useState({
+    title: "",
+    date: "",
+    time: "",
+    location: "",
+    background: "",
+  });
+
+  const [selectedDate, setSelectedDate] = useState("10-02-2025");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("08:00PM");
 
   const showTimePicker = () => setTimePickerVisible(true);
   const hideTimePicker = () => setTimePickerVisible(false);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: CreateEvent,
+
+    onSuccess: () => {
+      showToastable({
+        message: "Date night event created!",
+        status: "success",
+      });
+      router.push("/DashboardScreen");
+    },
+
+    onError: (error: any) => {
+      console.log({ error });
+    },
+  });
+
+  const validateInputs = () => {
+    const newErrors = {
+      title: "",
+      date: "",
+      time: "",
+      location: "",
+      background: "",
+    };
+
+    let isValid = true;
+
+    if (!title.trim()) {
+      newErrors.title = "Title is required.";
+      isValid = false;
+    }
+
+    if (!selectedDate) {
+      newErrors.date = "Date is required.";
+      isValid = false;
+    }
+
+    if (!selectedTime) {
+      newErrors.time = "Time is required.";
+      isValid = false;
+    }
+
+    if (!location.trim()) {
+      newErrors.location = "Location is required.";
+      isValid = false;
+    }
+
+    if (selectedBackground === null) {
+      newErrors.background = "Please select a background.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateInputs()) return;
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("createdByUserId", "72cc8694-9415-4131-a2f0-c22b4a6ef3b0");
+    formData.append("partnerId", "6e5befe3-f27b-41c9-80f9-e38589d8d229");
+    formData.append("date", selectedDate);
+    formData.append("time", selectedTime);
+    formData.append("eventType", "dateNight");
+
+    formData.append("location", location);
+    formData.append("reminder", reminder.toString());
+
+    if (formData) {
+      mutate({ payload: formData });
+    }
+  };
 
   const handleAddImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -133,6 +223,9 @@ const DateNightScreen = () => {
                   placeholder="Enter Date title"
                   lightColor="white"
                   darkColor="white"
+                  value={title}
+                  onChangeText={setTitle}
+                  errorText={errors.title}
                 />
               </View>
 
@@ -156,6 +249,12 @@ const DateNightScreen = () => {
                     editable={false}
                   />
                 </TouchableOpacity>
+
+                {errors.date && (
+                  <ThemedText style={styles.errorText} type="default">
+                    {errors.date}
+                  </ThemedText>
+                )}
 
                 {isDatePickerVisible && (
                   <DateTimePickerModal
@@ -189,6 +288,12 @@ const DateNightScreen = () => {
                   />
                 </TouchableOpacity>
 
+                {errors.time && (
+                  <ThemedText style={styles.errorText} type="default">
+                    {errors.time}
+                  </ThemedText>
+                )}
+
                 {isTimePickerVisible && (
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
@@ -208,6 +313,9 @@ const DateNightScreen = () => {
                   placeholder="Enter desired location"
                   lightColor="white"
                   darkColor="white"
+                  errorText={errors.location}
+                  value={location}
+                  onChangeText={setLocation}
                 />
               </View>
 
@@ -258,6 +366,12 @@ const DateNightScreen = () => {
                     );
                   }}
                 />
+
+{errors.background && (
+                  <ThemedText style={styles.errorText} type="default">
+                    {errors.background}
+                  </ThemedText>
+                )}
               </View>
 
               <View style={[styles.reminder]}>
@@ -296,12 +410,19 @@ const DateNightScreen = () => {
                   </Text>
                 </View>
 
-                <CustomSwitch value={false} onValueChange={() => {}} />
+                <CustomSwitch
+                  value={reminder}
+                  onValueChange={() => setReminder(!reminder)}
+                />
               </View>
             </ScrollView>
 
             <View style={{ marginTop: Size.calcHeight(20) }}>
-              <AppButton title="Save" />
+            <AppButton
+                loading={isPending}
+                onPress={handleSubmit}
+                title="Save"
+              />
             </View>
           </View>
         </ThemedView>
@@ -412,5 +533,11 @@ const styles = StyleSheet.create({
     fontSize: Size.calcWidth(16),
     fontWeight: "500",
     marginBottom: Size.calcHeight(12),
+  },
+
+  errorText: {
+    color: "red",
+    fontSize: Size.calcAverage(16),
+    fontWeight: "500",
   },
 });

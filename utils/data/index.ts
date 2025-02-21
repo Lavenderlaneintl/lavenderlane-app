@@ -1,5 +1,7 @@
 import ChatBubble from "@/assets/svgs/ChatBubble";
 import { IAppFeatures, IChitChatOptions } from "../interfaces/index.interfaces";
+import AnniversaryDate from "@/assets/svgs/anniversary";
+import BirthdayCelebrationIcon from "@/assets/svgs/birthday-celebration";
 
 export const exploreFeatures: IAppFeatures[] = [
   {
@@ -44,7 +46,7 @@ export const exploreFeatures: IAppFeatures[] = [
     title: "Celebration",
     icon: require("@/assets/images/celebration.png"),
     color: "#AF8BEA33",
-    route: "/ComingSoonScreen",
+    route: "/CelebrationScreen",
   },
 
   {
@@ -206,5 +208,22 @@ export const intimacyOptions: IChitChatOptions[] = [
     description: "Play a dare game",
     icon: ChatBubble,
     route: "/ComingSoonScreen",
+  },
+];
+
+export const celebrationOptions: IChitChatOptions[] = [
+  {
+    id: 1,
+    title: "Wedding Anniversary",
+    description: "Celebrate your wedding annive...",
+    icon: AnniversaryDate,
+    route: "/CelebrationScreen/wedding-anniversary",
+  },
+  {
+    id: 2,
+    title: "Birthday",
+    description: "Celebrate your birthday ",
+    icon: BirthdayCelebrationIcon,
+    route: "/CelebrationScreen/birthday-screen",
   },
 ];

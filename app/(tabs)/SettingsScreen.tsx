@@ -30,6 +30,7 @@ const SettingsScreen = () => {
       <ThemedView
         style={{
           padding: Size.calcWidth(20),
+          flex: 1
         }}
       >
         <FlatList

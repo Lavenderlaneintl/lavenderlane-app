@@ -9,7 +9,7 @@ export function UpdateProfileByEmail({
   payload: Partial<IUserPayload>;
 }) {
   return apiClient
-    .post<any>(`/users/update?email=${email}`, payload)
+    .put<any>(`/users/update?email=${email}`, payload)
     .then((response) => {
       return response.data;
     });
