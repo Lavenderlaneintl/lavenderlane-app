@@ -6,12 +6,13 @@ import AppButton from "@/components/AppButton";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { ThemedView } from "@/components/ThemedView";
-import { setLocalData } from "@/utils/configs/localStorage";
 import storeKeys from "@/utils/constants/storeKeys";
+import { useSettingsStore } from "@/utils/store/settingStore";
 
 const OnboardingScreen = (): JSX.Element => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
+  const { setIsOnboard } = useSettingsStore();
 
   const pages = [
     {
@@ -35,9 +36,11 @@ const OnboardingScreen = (): JSX.Element => {
   ];
 
   const handleComplete = () => {
-    setLocalData(storeKeys.onboarding, "true", () => {
+    setIsOnboard(true);
+
+    setTimeout(() => {
       router.replace("/RegisterScreen");
-    });
+    }, 100);
   };
 
   const handleNext = (): void => {

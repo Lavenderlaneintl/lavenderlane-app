@@ -1,7 +1,8 @@
 // localstorage keys
 
-const storeKeys = {
-  onboarding: "isOnboard",
+const STORE_KEYS = {
+  appSettings: "app-setting",
+  userData: "user-data",
 };
 
-export default storeKeys;
+export default STORE_KEYS;

@@ -1,9 +1,10 @@
 import axios from "axios";
-import { getLocalData } from "./localStorage";
+import { useUserStore } from "../store/userStore";
 
 const BASE_URL = "https://lavenderlaneint.onrender.com";
 
-const token = getLocalData("userToken");
+const { authData } = useUserStore();
+const token = authData?.token;
 
 // Create an Axios instance
 const apiClient = axios.create({
@@ -17,10 +18,9 @@ const apiClient = axios.create({
 // token interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcyY2M4Njk0LTk0MTUtNDEzMS1hMmYwLWMyMmI0YTZlZjNiMCIsImlhdCI6MTczOTkyMzgyMCwiZXhwIjoxNzQwMDEwMjIwfQ.Y4OpLowJ4SSxpWqc6uNTDSRvNTXydNlBbt46bmMQCAU`;
-    // if (token) {
-    //   config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcyY2M4Njk0LTk0MTUtNDEzMS1hMmYwLWMyMmI0YTZlZjNiMCIsImlhdCI6MTczOTQ5MTQ4NiwiZXhwIjoxNzM5NTc3ODg2fQ.5Deo0__HIYfyvtcnaVP4M9p0yWzq0IDfyhRV4wT-igE0`;
-    // }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
     return config;
   },
