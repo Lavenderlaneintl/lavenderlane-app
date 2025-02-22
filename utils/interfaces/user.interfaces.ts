@@ -5,6 +5,18 @@ export interface IUserPayload {
   lastName: string;
   gender: "Male" | "Female";
   username: string;
-  endearment: string;
-  phoneNumber: string;
+  coupleId: string;
+  createdAt: string;
+  endearment: string | null;
+  id: string;
+  imagePublicId: string | null;
+  imageUrl: string | null;
+  inSync: boolean;
+  isActive: boolean;
+  isVerified: boolean;
+  phoneNumber: string | null;
+  sharedRef: string;
+  syncId: string;
+  syncedWith: string;
+  updatedAt: string;
 }

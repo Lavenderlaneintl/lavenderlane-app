@@ -14,3 +14,9 @@ export function UpdateProfileByEmail({
       return response.data;
     });
 }
+
+export function getUserDetails(id: string) {
+  return apiClient.get<IUserPayload[]>(`/users/${id}`).then((response) => {
+    return response.data;
+  });
+}

@@ -1,11 +1,12 @@
-import React from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, Platform, RefreshControl } from "react-native";
 import { Circle } from "react-native-progress";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import AppButton from "@/components/AppButton";
 import FileIcon from "@/assets/svgs/File";
 import Size from "@/utils/hooks/useResponsiveSize";
+import { useUserStore } from "@/utils/store/userStore";
 
 const CircularProgress = ({ progress = 75 }: { progress: number }) => (
   <View style={styles.circularProgressContainer}>
@@ -21,60 +22,71 @@ const CircularProgress = ({ progress = 75 }: { progress: number }) => (
   </View>
 );
 
-const DashboardScreen = () => (
-  <ThemedView style={styles.container}>
-    <View style={styles.shadowWrapper}>
-      <View style={styles.profileCard}>
-        <View style={styles.row}>
-          <View style={{ flex: 1 }}>
-            <ThemedText
-              darkColor="##373D51"
-              type="title"
-              style={styles.cardTitle}
-            >
-              Complete your Profile
-            </ThemedText>
-            <ThemedText
-              darkColor="##373D51"
-              type="subtitle"
-              style={styles.cardSubtitle}
-            >
-              Enter all necessary details to enjoy the features of Lavenderlane
-            </ThemedText>
-          </View>
-          <View style={styles.progressContainer}>
-            <CircularProgress progress={75} />
-          </View>
-        </View>
-        <AppButton
-          title="Update Profile"
-          style={styles.updateButton}
-          onPress={() => {}}
-        />
-      </View>
-    </View>
+const DashboardScreen = () => {
+  const { refetchUser, isRefetching } = useUserStore();
 
-    {/* Upcoming Events */}
-    <View style={styles.eventsSection}>
-      <ThemedText type="title" style={styles.sectionTitle}>
-        Upcoming Events
-      </ThemedText>
-      <View style={styles.emptyState}>
-        <FileIcon />
-        <ThemedText style={styles.emptyText}>
-          You are yet to add events
-        </ThemedText>
-        <AppButton
-          title="Add Events ✨"
-          style={{
-            width: Size.calcWidth(160),
-            height: Size.calcHeight(46),
-          }}
-        />
+  return (
+    <ThemedView
+      style={styles.container}
+      scrollable
+      refreshControl={
+        <RefreshControl refreshing={isRefetching} onRefresh={refetchUser} />
+      }
+    >
+      <View style={styles.shadowWrapper}>
+        <View style={styles.profileCard}>
+          <View style={styles.row}>
+            <View style={{ flex: 1 }}>
+              <ThemedText
+                darkColor="##373D51"
+                type="title"
+                style={styles.cardTitle}
+              >
+                Complete your Profile
+              </ThemedText>
+              <ThemedText
+                darkColor="##373D51"
+                type="subtitle"
+                style={styles.cardSubtitle}
+              >
+                Enter all necessary details to enjoy the features of
+                Lavenderlane
+              </ThemedText>
+            </View>
+            <View style={styles.progressContainer}>
+              <CircularProgress progress={75} />
+            </View>
+          </View>
+          <AppButton
+            title="Update Profile"
+            style={styles.updateButton}
+            onPress={() => {}}
+          />
+        </View>
       </View>
-    </View>
-  </ThemedView>
-);
+
+      {/* Upcoming Events */}
+      <View style={styles.eventsSection}>
+        <ThemedText type="title" style={styles.sectionTitle}>
+          Upcoming Events
+        </ThemedText>
+        <View style={styles.emptyState}>
+          <FileIcon />
+          <ThemedText style={styles.emptyText}>
+            You are yet to add events
+          </ThemedText>
+          <AppButton
+            title="Add Events ✨"
+            style={{
+              width: Size.calcWidth(160),
+              height: Size.calcHeight(46),
+            }}
+          />
+        </View>
+      </View>
+    </ThemedView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
