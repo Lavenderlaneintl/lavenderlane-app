@@ -4,7 +4,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { settingsOptions } from "@/utils/data";
 import useLogout from "@/utils/hooks/useLogout";
 import Size from "@/utils/hooks/useResponsiveSize";
-import { useUserStore } from "@/utils/store/userStore";
+import { useSettingsStore } from "@/utils/store/settingStore";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
@@ -19,12 +19,7 @@ import {
 
 const SettingsScreen = () => {
   const logout = useLogout();
-
-  const { authData } = useUserStore();
-  const token = authData;
-  
-  console.log("token", token);
-  
+  const { darkMode, setDarkMode } = useSettingsStore();
 
   return (
     <ThemedView style={{ flex: 1 }}>
@@ -37,7 +32,6 @@ const SettingsScreen = () => {
       <ThemedView
         style={{
           padding: Size.calcWidth(20),
-          flex: 1
         }}
       >
         <FlatList
@@ -94,7 +88,12 @@ const SettingsScreen = () => {
 
                 {!item.title.includes("Log out") &&
                   (item.toggle ? (
-                    <CustomSwitch value={false} onValueChange={() => {}} />
+                    <CustomSwitch
+                      value={darkMode === "dark" ? true : false}
+                      onValueChange={(value) =>
+                        setDarkMode(value === true ? "dark" : "light")
+                      }
+                    />
                   ) : (
                     <Ionicons
                       name="chevron-forward-outline"

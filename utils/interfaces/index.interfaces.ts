@@ -7,6 +7,7 @@ export interface IAppFeatures {
   icon: any;
   color: string;
   route: Href;
+  toggleFunction?: () => void;
 }
 
 export interface IChitChatOptions {

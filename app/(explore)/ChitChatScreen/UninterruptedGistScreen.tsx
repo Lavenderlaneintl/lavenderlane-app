@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -6,37 +6,103 @@ import {
   View,
   TextInput,
   FlatList,
-  useColorScheme,
   Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { io } from "socket.io-client";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
+import { useUserStore } from "@/utils/store/userStore";
+import {
+  ConversationTypeEnum,
+  IMessage,
+  MessageTypeEnum,
+} from "@/utils/interfaces/message.interfaces";
 
 const UninterruptedGistScreen = (): JSX.Element => {
   const colorScheme = useColorScheme();
   const cardColor = useThemeColor({ colorName: "card" });
+  const socket = useRef<any>(null);
+  const { authData, user } = useUserStore();
 
-  const [messages, setMessages] = useState([
-    { id: "1", text: "Hello! Babe", sender: "me" },
-    { id: "2", text: "Hi Love, How’re you doing?", sender: "other" },
-    { id: "3", text: "Really nice having you here", sender: "me" },
-    { id: "4", text: "Yh, me too", sender: "other" },
-    { id: "5", text: "Want to show you something", sender: "me" },
-  ]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   const [input, setInput] = useState("");
   const flatListRef = useRef<FlatList>(null);
 
+  // Initialize socket connection
+  useEffect(() => {
+    socket.current = io("https://lavenderlaneint.onrender.com", {
+      query: {
+        token: authData?.token ?? "",
+      },
+    });
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, []);
+
+  // Listen for incoming messages
+  useEffect(() => {
+    if (!socket.current) return;
+
+    const handleIncomingMessage = (message: IMessage) => {
+      console.log("====================================");
+      console.log({ message });
+      console.log("====================================");
+      const newMessage: IMessage = {
+        ...message,
+        id: Date.now().toString(),
+        isSender: false,
+      };
+      setMessages((prev) => [...prev, newMessage]);
+
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    };
+
+    socket.current.on("sendMessage", handleIncomingMessage);
+
+    return () => {
+      socket.current?.off("sendMessage", handleIncomingMessage);
+    };
+  }, []);
+
   const sendMessage = useCallback(() => {
     if (input.trim().length === 0) return;
 
-    const newMessage = { id: Date.now().toString(), text: input, sender: "me" };
+    const payload = {
+      message: input,
+      conversationType: ConversationTypeEnum.Direct,
+      coupleId: user?.coupleId ?? "",
+      partnerId: user?.syncedWith ?? "",
+      senderId: authData?.id ?? "",
+      type: MessageTypeEnum.Text,
+    };
+
+    const newMessage: IMessage = {
+      ...payload,
+      id: Date.now().toString(),
+      isSender: true,
+    };
+
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    // Send message through socket
+    if (socket.current) {
+      console.log({ payload });
+
+      socket.current.emit("sendMessage", payload);
+    }
 
     setInput("");
     Keyboard.dismiss();
@@ -69,11 +135,11 @@ const UninterruptedGistScreen = (): JSX.Element => {
           ref={flatListRef}
           data={messages}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+          renderItem={({ item }: { item: IMessage }) => (
             <View
               style={[
                 styles.messageBubble,
-                item.sender === "me"
+                item.isSender
                   ? styles.myMessage
                   : {
                       alignSelf: "flex-start",
@@ -84,12 +150,12 @@ const UninterruptedGistScreen = (): JSX.Element => {
               <ThemedText
                 lightColor="#373D51"
                 style={
-                  item.sender === "me" && colorScheme === "light"
+                  item.isSender && colorScheme === "light"
                     ? { color: "#fff" }
                     : {}
                 }
               >
-                {item.text}
+                {item.message}
               </ThemedText>
             </View>
           )}

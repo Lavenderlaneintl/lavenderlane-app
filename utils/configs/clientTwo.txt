@@ -1,0 +1,242 @@
+import { DefaultEventsMap } from "socket.io";
+import { io, Socket } from "socket.io-client";
+
+interface Mood {
+  id: number;
+  user: { id: string };
+  partnerId: string;
+  moodEmoji: string;
+  moodReactionEmoji: string;
+  moodMessage: string;
+  moodReactionMessage: string;
+  createdAt: Date;
+}
+
+interface ConnectionEstablished {
+  metrics: { userSocketConnectionIdSaved: boolean };
+  message: string;
+}
+
+const socket = io("http://127.0.0.1:8030", {
+  query: {
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU2MWMxODJkLWVjOGItNDkxYS1iODY3LWZhMDA0YzZlY2ExMSIsImlhdCI6MTczOTc5MjUxNiwiZXhwIjoxNzM5ODc4OTE2fQ.fPNMX1u_4qzuxkiyR3WDz-p5J-4mIskyngfRcG2bN4k"
+  },
+});
+
+/**
+ * Emitted if user token is missing, not valid, or if connection error
+ */
+socket.on("connect_error", (err) => {
+  console.error(`Connection failed: ${err.message}`);
+});
+
+/**
+ * Event: "authorized"
+ * Emitted when connection is established and user is successfully authenticated
+ * -----------------------------------------------------------------------------
+ * Emit-event: "client"
+ * Sends the userId and the websocket connection id to the server
+ */
+socket.on("authorized", () => {
+  console.log(`Client connection established ${socket.id}`);
+
+  socket.emit("client", {
+    userSocketId: socket.id,
+    userId: "561c182d-ec8b-491a-b867-fa004c6eca11",
+  });
+});
+
+socket.on("missingClintId", (error: any) => {
+  console.log(error);
+});
+
+socket.on("invalidUserId", (error: any) => {
+  console.log(error);
+});
+
+socket.on("invalidCoupleId", (error: any) => {
+  console.log(error);
+});
+
+socket.on("notCouples", (error: any) => {
+  console.log(error);
+});
+
+/**
+ * Event: "userSocketConnectionIdSaved"
+ * Emitted when the user's socket connection id is saved
+ * -----------------------------------------------------------------------------
+ * At this poit the client can start sharing mood, messages, etc
+ * The "userSocketConnectionIdSaved" metric is used to determine if the user's socket connection id is saved
+ */
+socket.on("userSocketConnectionIdSaved", (data: ConnectionEstablished) => {
+  console.log(data);
+
+  // This checks if the "userSocketConnectionIdSaved" metric is true before sharing mood
+  if (data.metrics.userSocketConnectionIdSaved) {
+    /**
+     * Test share mood event
+     * Share mood every 30 secs
+     * 30000ms = 30 seconds
+     */
+    //
+    // setInterval(() => shareMood(socket), 30000);
+
+    /**
+     * Test realtime messaging event
+     * Message sent every 60 secs
+     * 30000ms = 60 seconds
+     */
+    //
+    setInterval(() => sendMessage(socket), 30000);
+  }
+});
+
+/**
+ * Event: "moodResponse"
+ * Emited when partner responds to mood shared
+ */
+socket.on("moodResponse", (moodResponse: any) => {
+  console.log(moodResponse);
+});
+
+/**
+ * Event: "newMoodMessageAlert"
+ * Emitted when partner shares mood
+ * Respond to partner's mood
+ */
+socket.on("newMoodMessageAlert", (mood: Mood) => {
+  respondToPartnersMood(mood);
+});
+
+/**
+ * Event: "newMessage"
+ * Emited when a new message is recieved
+ * Respond to the message
+ */
+socket.on("newMessage", (message: Message) => {
+  console.log("Client two recived a message from client one");
+
+  console.log(message);
+  socket.emit("messageDelivered", {
+    id: message.id,
+    conversationId: message.conversation.id,
+    status: "delivered",
+  });
+
+  // Emit messageRead afer 60
+  setInterval(
+    () =>
+      socket.emit("messageRead", {
+        id: message.id,
+        conversationId: message.conversation.id,
+        status: "read",
+      }),
+    60000
+  );
+});
+
+socket.on("disconnect", () => {
+  console.error(`Client disconnected`);
+});
+
+/**
+ * Emit-event: "newMood"
+ * Share mood with partner
+ * send this payload to the backend
+ { 
+    userId: string; 
+    emoji: string; 
+    message?: string; 
+    coupleId: string; 
+    userSocketId: string; 
+  };
+ */
+// const shareMood = (socket: Socket<DefaultEventsMap, DefaultEventsMap>) => {
+//   console.log("Client two sharing mood...");
+
+//   socket.emit("shareMoodWithPartner", {
+//     userId: "561c182d-ec8b-491a-b867-fa004c6eca11",
+//     emoji: "emoji",
+//     message: "message from client two to one",
+// coupleId: "lavenders_hBrPYcjr7",
+//     userSocketId: socket.id,
+//   });
+// };
+
+/**
+ * Emit-event: "respondToPartnersMood"
+ * Respond to mood shared by partner
+ * send this payload to the backend
+ { 
+    userId: string; 
+    moodId: string; 
+    responseEmoji: string; coupleId: string; 
+    responseMessage?: string; 
+    userSocketId: string; 
+  };
+ */
+const respondToPartnersMood = (mood: Mood) => {
+  const { id, user } = mood;
+  console.info(`Received mood from partner`);
+  console.log(mood);
+  console.info(`Client two responding to mood with id: ${id}`);
+  socket.emit("respondToPartnersMood", {
+    moodId: id,
+    userId: user.id,
+    responseEmoji: "response emoji",
+    responseMessage: " response to the mood shared by partner",
+    coupleId: "lavenders_hBrPYcjr7",
+    userSocketId: socket.id,
+  });
+};
+
+/**
+ * Emit-event: "newMessage"
+ * Send message to partner
+ * send this payload to the backend
+ { 
+    senderId: string; 
+    partnerId: string; 
+    message: string; 
+    type: "text" | "image" | "audio" | "video"; 
+    converstionType: "direct" | "group " | "chit-chat" | "flirt";
+    coupleId: string,
+  };
+ */
+const sendMessage = (socket: Socket<DefaultEventsMap, DefaultEventsMap>) => {
+  console.log("Client two sent a message...");
+
+  socket.emit("sendMessage", {
+    partnerId: "1a707880-ba56-443b-9c87-082c5b91d2d3",
+    senderId: "561c182d-ec8b-491a-b867-fa004c6eca11",
+    message: "message from client two to one",
+    type: "text",
+    converstionType: "direct",
+    coupleId: "lavenders_hBrPYcjr7",
+  });
+};
+
+interface Message {
+  id: string;
+  conversation: {
+    id: string;
+    type: "direct" | "group" | "chit-chat" | "flirt";
+    name: string; // conversation name
+    coupleId: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  sender: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+    endearment: string;
+  };
+  content: string;
+  status: "sent" | "delivered" | "read";
+  createdAt: string;
+  updatedAt: string;
+}
