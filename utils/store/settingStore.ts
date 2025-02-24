@@ -4,26 +4,26 @@ import { storage } from "../configs/appStorage";
 import STORE_KEYS from "../constants/storeKeys";
 
 type SettingsState = {
-  darkMode: boolean;
   faceIdEnabled: boolean;
   requirePasswordOnLogin: boolean;
   isOnboarded: boolean;
-  setDarkMode: (enabled: boolean) => void;
   setIsOnboard: (enabled: boolean) => void;
   setFaceIdEnabled: (enabled: boolean) => void;
   setRequirePasswordOnLogin: (enabled: boolean) => void;
   resetSettings: () => void;
+  darkMode: "system" | "light" | "dark";
+  setDarkMode: (mode: "system" | "light" | "dark") => void;
 };
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      darkMode: false,
+      darkMode: "system",
       faceIdEnabled: false,
       requirePasswordOnLogin: true,
       isOnboarded: false,
 
-      setDarkMode: (enabled) => set({ darkMode: enabled }),
+      setDarkMode: (mode) => set({ darkMode: mode }),
       setIsOnboard: (enabled) => set({ isOnboarded: enabled }),
       setFaceIdEnabled: (enabled) => set({ faceIdEnabled: enabled }),
       setRequirePasswordOnLogin: (enabled) =>
@@ -32,7 +32,7 @@ export const useSettingsStore = create<SettingsState>()(
       resetSettings: () => {
         storage.delete(STORE_KEYS.appSettings);
         set({
-          darkMode: false,
+          darkMode: "system",
           faceIdEnabled: false,
           requirePasswordOnLogin: true,
         });

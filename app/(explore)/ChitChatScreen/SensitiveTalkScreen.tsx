@@ -6,7 +6,6 @@ import {
   View,
   TextInput,
   FlatList,
-  useColorScheme,
   Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +15,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 const SensitiveTalkScreen = (): JSX.Element => {
   const colorScheme = useColorScheme();
