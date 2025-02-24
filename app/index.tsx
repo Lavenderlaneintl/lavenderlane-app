@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useNavigationContainerRef, useRouter } from "expo-router";
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { useUserStore } from "@/utils/store/userStore";
@@ -9,11 +9,14 @@ import { useSettingsStore } from "@/utils/store/settingStore";
 const MainScreen = (): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const router = useRouter();
+  const navigationRef = useNavigationContainerRef();
 
   const { authData } = useUserStore();
   const { isOnboarded } = useSettingsStore();
 
   useEffect(() => {
+    if (!navigationRef.isReady()) return;
+
     if (isOnboarded) {
       if (authData) {
         router.replace("/DashboardScreen");

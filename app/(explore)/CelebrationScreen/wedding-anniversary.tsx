@@ -21,12 +21,40 @@ import { ThemedTextarea } from "@/components/ThemedTextArea";
 import CustomSwitch from "@/components/AppSwitch";
 import ReminderSpeakerIcon from "@/assets/svgs/reminder";
 import AppButton from "@/components/AppButton";
+import { useUserStore } from "@/utils/store/userStore";
+import { useMutation } from "@tanstack/react-query";
+import { CreateCelebration } from "@/utils/apis/celebration";
+import { showToastable } from "react-native-toastable";
 
 const WeddingAnniversaryScreen = (): JSX.Element => {
   const colorScheme = useColorScheme();
+  const { authData } = useUserStore();
 
   const [selectedDate, setSelectedDate] = useState("10-02-2025");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const [note, setNote] = useState("");
+  const [reminder, setReminder] = useState(false);
+
+  const [errors, setErrors] = useState({
+    note: "",
+    date: "",
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: CreateCelebration,
+
+    onSuccess: () => {
+      showToastable({
+        message: "Your celebration has been created successfully",
+        status: "success",
+      });
+    },
+
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -40,6 +68,44 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
     const formattedDate = date.toISOString().split("T")[0];
     setSelectedDate(formattedDate);
     hideDatePicker();
+  };
+
+  const validateInputs = () => {
+    const newErrors = {
+      note: "",
+      date: "",
+    };
+
+    let isValid = true;
+
+    if (!note.trim()) {
+      newErrors.note = "Note is required.";
+      isValid = false;
+    }
+
+    if (!selectedDate) {
+      newErrors.date = "Date is required.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateInputs()) return;
+
+    if (authData) {
+      mutate({
+        payload: {
+          createdBy: authData?.id,
+          note,
+          date: selectedDate,
+          reminder,
+          celebrationType: "anniversary",
+        },
+      });
+    }
   };
 
   return (
@@ -60,7 +126,7 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             width: "100%",
-           
+
             justifyContent: "center",
             gap: Size.calcWidth(18),
             paddingBottom: Size.calcHeight(90),
@@ -88,7 +154,6 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
                   label="Date"
                   value={selectedDate}
                   placeholder="Select date"
-                  lightColor="white"
                   rightIcon={
                     <Ionicons
                       name="chevron-down-outline"
@@ -101,6 +166,12 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
                 />
               </TouchableOpacity>
 
+              {errors.date && (
+                <ThemedText style={styles.errorText} type="default">
+                  {errors.date}
+                </ThemedText>
+              )}
+
               {isDatePickerVisible && (
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
@@ -112,10 +183,21 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
               )}
             </View>
 
-            <ThemedTextarea
-              label="Write a short love note to your partner"
-              placeholder="Start typing..."
-            />
+            <View>
+              <ThemedTextarea
+                lightColor="white"
+                value={note}
+                onChangeText={setNote}
+                label="Write a short love note to your partner"
+                placeholder="Start typing..."
+              />
+
+              {errors.note && (
+                <ThemedText style={styles.errorText} type="default">
+                  {errors.note}
+                </ThemedText>
+              )}
+            </View>
           </View>
 
           <View style={[styles.reminder]}>
@@ -154,10 +236,15 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
               </Text>
             </View>
 
-            <CustomSwitch value={false} onValueChange={() => {}} />
+            <CustomSwitch
+              value={reminder}
+              onValueChange={() => setReminder(!reminder)}
+            />
           </View>
 
           <AppButton
+            onPress={handleSubmit}
+            loading={isPending}
             style={{ marginVertical: Size.calcHeight(15) }}
             title="Done"
           />
@@ -232,5 +319,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: Size.calcWidth(10),
+  },
+
+  errorText: {
+    color: "red",
+    fontSize: Size.calcAverage(16),
+    fontWeight: "500",
   },
 });

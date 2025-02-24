@@ -6,6 +6,8 @@ const BASE_URL = "https://lavenderlaneint.onrender.com";
 const { authData } = useUserStore();
 const token = authData?.token;
 
+console.log("token", token);
+
 // Create an Axios instance
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -19,7 +21,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcyY2M4Njk0LTk0MTUtNDEzMS1hMmYwLWMyMmI0YTZlZjNiMCIsImlhdCI6MTc0MDEzMjYwMiwiZXhwIjoxNzQwMjE5MDAyfQ.4gqmWwAIOTBMXv9tJEQTmCxv-36tW8jH2xMRygIM7As`;
     }
 
     return config;

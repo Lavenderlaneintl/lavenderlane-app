@@ -108,7 +108,7 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
               )}
             </View>
 
-            <ThemedView
+            {/* <ThemedView
               style={[styles.wishList, { backgroundColor: cardColor }]}
             >
               <ThemedText style={styles.wishListTitle}>
@@ -133,7 +133,7 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
                   Optional
                 </Text>
               </View>
-            </ThemedView>
+            </ThemedView> */}
           </View>
 
           <View style={[styles.reminder]}>
