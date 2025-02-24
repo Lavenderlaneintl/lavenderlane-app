@@ -55,9 +55,6 @@ const UninterruptedGistScreen = (): JSX.Element => {
     if (!socket.current) return;
 
     const handleIncomingMessage = (message: IMessage) => {
-      console.log("====================================");
-      console.log({ message });
-      console.log("====================================");
       const newMessage: IMessage = {
         ...message,
         id: Date.now().toString(),

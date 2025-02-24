@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { ActivityIndicator, Platform, StatusBar, View } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import LogoIcon from "@/assets/svgs/Logo";
 import Size from "@/utils/hooks/useResponsiveSize";
@@ -8,6 +8,7 @@ import { ThemedView } from "@/components/ThemedView";
 import TabBar from "@/components/navigation/Tabbar";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useInitializeUser } from "@/utils/store/userStore";
+import LottieView from "lottie-react-native";
 
 export default function TabLayout() {
   const { isLoading } = useInitializeUser();
@@ -21,7 +22,14 @@ export default function TabLayout() {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator size="large" />
+        <LottieView
+          autoPlay
+          style={{
+            width: Size.calcWidth(280),
+            height: Size.calcHeight(300),
+          }}
+          source={require("../../assets/animations/loadingHeart.json")}
+        />
       </View>
     );
   }
