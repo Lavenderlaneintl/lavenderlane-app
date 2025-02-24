@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { View, StyleSheet, Platform, RefreshControl } from "react-native";
 import { Circle } from "react-native-progress";
 import { ThemedView } from "@/components/ThemedView";
@@ -7,6 +7,7 @@ import AppButton from "@/components/AppButton";
 import FileIcon from "@/assets/svgs/File";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { useUserStore } from "@/utils/store/userStore";
+import { useRouter } from "expo-router";
 
 const CircularProgress = ({ progress = 75 }: { progress: number }) => (
   <View style={styles.circularProgressContainer}>
@@ -24,6 +25,7 @@ const CircularProgress = ({ progress = 75 }: { progress: number }) => (
 
 const DashboardScreen = () => {
   const { refetchUser, isRefetching } = useUserStore();
+  const router = useRouter();
 
   return (
     <ThemedView
@@ -60,7 +62,7 @@ const DashboardScreen = () => {
           <AppButton
             title="Update Profile"
             style={styles.updateButton}
-            onPress={() => {}}
+            onPress={() => router.push("/profile")}
           />
         </View>
       </View>

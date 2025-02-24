@@ -42,6 +42,7 @@
     "expo-system-ui": "~4.0.8",
     "expo-updates": "~0.26.19",
     "expo-web-browser": "~14.0.1",
+    "lodash": "^4.17.21",
     "lottie-react-native": "7.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -66,6 +67,7 @@
     "@babel/core": "^7.25.2",
     "@tanstack/eslint-plugin-query": "^5.62.9",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4",
     "@types/react": "~18.3.12",
     "@types/react-native-onboarding-swiper": "^1",
     "@types/react-test-renderer": "^18.3.0",
@@ -74,5 +76,6 @@
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
   },
-  "private": true
+  "private": true,
+  "packageManager": "yarn@4.6.0+sha512.5383cc12567a95f1d668fbe762dfe0075c595b4bfff433be478dbbe24e05251a8e8c3eb992a986667c1d53b6c3a9c85b8398c35a960587fbd9fa3a0915406728"
 }

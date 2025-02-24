@@ -44,7 +44,6 @@ const ThemeInput: FC<InputProps> = ({
   });
   const textColor = useThemeColor({
     colorName: "text",
-    props: { dark: "black" },
   });
   const iconColor = useThemeColor({ colorName: "icon" });
   const borderColor = errorText ? "red" : iconColor;

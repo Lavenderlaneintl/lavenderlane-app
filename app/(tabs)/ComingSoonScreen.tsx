@@ -1,13 +1,20 @@
 import React from "react";
-import { View, StyleSheet, Linking } from "react-native";
+import { View, StyleSheet, Linking, TouchableOpacity } from "react-native";
 import LottieView from "lottie-react-native";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import AppButton from "@/components/AppButton";
 import Size from "@/utils/hooks/useResponsiveSize";
+import { useThemeColor } from "@/utils/hooks/useThemeColor";
 
 const ComingSoonScreen = () => {
+  const router = useRouter();
+
+  const iconColor = useThemeColor({ colorName: "text" });
+
   const handleLearnMore = async () => {
     const url = "https://www.lavenderlaneinternational.com/faq";
     await Linking.openURL(url).catch((err) =>
@@ -17,6 +24,14 @@ const ComingSoonScreen = () => {
 
   return (
     <ThemedView style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Ionicons
+          name="arrow-back"
+          size={Size.calcWidth(24)}
+          color={iconColor}
+        />
+      </TouchableOpacity>
+
       <View style={styles.content}>
         <LottieView
           autoPlay
@@ -45,6 +60,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: Size.calcWidth(18),
+  },
+
+  backButton: {
+    position: "absolute",
+    top: Size.calcHeight(20),
+    left: Size.calcWidth(20),
+    zIndex: 10,
   },
 
   content: {
