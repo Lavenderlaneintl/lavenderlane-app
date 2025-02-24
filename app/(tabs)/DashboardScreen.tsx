@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Platform, FlatList } from "react-native";
+import { View, StyleSheet, Platform, FlatList , RefreshControl} from "react-native";
 import { Circle } from "react-native-progress";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -10,6 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import { GetEvents } from "@/utils/apis/events";
 import UpcomingEventCard from "@/components/upcoming-event-card";
 import UpcomingDateNightCard from "@/components/upcoming-date-night";
+import { useUserStore } from "@/utils/store/userStore";
+import { useRouter } from "expo-router";
 
 const CircularProgress = ({ progress = 75 }: { progress: number }) => (
   <View style={styles.circularProgressContainer}>
@@ -26,14 +28,23 @@ const CircularProgress = ({ progress = 75 }: { progress: number }) => (
 );
 
 const DashboardScreen = () => {
+  const { refetchUser, isRefetching } = useUserStore();
+  const router = useRouter();
+
   const { data = [] } = useQuery({
     queryKey: ["events"],
     queryFn: () => GetEvents({ coupleId: "lavenders_Ka6ZdLhj" }),
   });
 
+
   return (
-    <ThemedView style={styles.container}>
-      {/* Profile Section */}
+    <ThemedView
+      style={styles.container}
+      scrollable
+      refreshControl={
+        <RefreshControl refreshing={isRefetching} onRefresh={refetchUser} />
+      }
+    >
       <View style={styles.shadowWrapper}>
         <View style={styles.profileCard}>
           <View style={styles.row}>
@@ -61,12 +72,13 @@ const DashboardScreen = () => {
           <AppButton
             title="Update Profile"
             style={styles.updateButton}
-            onPress={() => {}}
+            onPress={() => router.push("/profile")}
           />
         </View>
       </View>
 
       {/* Upcoming Events Section */}
+      {/* Upcoming Events */}
       <View style={styles.eventsSection}>
         <ThemedText type="title" style={styles.sectionTitle}>
           Upcoming Events

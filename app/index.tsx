@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useNavigationContainerRef, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
 import Size from "@/utils/hooks/useResponsiveSize";
 import { useUserStore } from "@/utils/store/userStore";
@@ -9,13 +9,25 @@ import { useSettingsStore } from "@/utils/store/settingStore";
 const MainScreen = (): JSX.Element => {
   const color = useThemeColor({ colorName: "text" });
   const router = useRouter();
-  const navigationRef = useNavigationContainerRef();
 
   const { authData } = useUserStore();
   const { isOnboarded } = useSettingsStore();
 
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
-    if (!navigationRef.isReady()) return;
+    const initialize = async () => {
+      // Wait a short delay to ensure hydration
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      setIsReady(true);
+    };
+
+    initialize();
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) return; // Ensure Zustand is ready before navigating
 
     if (isOnboarded) {
       if (authData) {
@@ -26,7 +38,7 @@ const MainScreen = (): JSX.Element => {
     } else {
       router.replace("/OnboardingScreen");
     }
-  }, [isOnboarded, authData]);
+  }, [isOnboarded, authData, isReady]);
 
   return (
     <View style={styles.container}>
@@ -39,8 +51,6 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 0,
-    position: "relative",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",

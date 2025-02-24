@@ -1,8 +1,13 @@
-import { View, type ViewProps, ScrollView } from "react-native";
+import {
+  View,
+  type ViewProps,
+  ScrollView,
+  ScrollViewProps,
+} from "react-native";
 
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
 
-export type ThemedViewProps = ViewProps & {
+export type ThemedViewProps = ScrollViewProps & {
   lightColor?: string;
   darkColor?: string;
   scrollable?: boolean;

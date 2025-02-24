@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Platform,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -18,9 +19,51 @@ import { ThemedText } from "@/components/ThemedText";
 import AppButton from "@/components/AppButton";
 
 import ThemeInput from "@/components/ThemedInput";
+import { useUserStore } from "@/utils/store/userStore";
+import { useMutation } from "@tanstack/react-query";
+import { UpdateProfileById } from "@/utils/apis/user";
 
 const ProfilePage = (): JSX.Element => {
   const [edit, setEdit] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState("");
+
+  const { user, refetchUser, isRefetching } = useUserStore();
+
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
+      setGender(user.gender);
+    }
+  }, [user]);
+
+  const { isPending: isLoading, mutate } = useMutation({
+    mutationFn: UpdateProfileById,
+
+    onSuccess: (data) => {
+      refetchUser();
+      setEdit(false);
+    },
+
+    onError: (error: any) => {
+      console.log({ error: JSON.stringify(error) });
+    },
+  });
+
+  const handleSubmit = () => {
+    if (user) {
+      mutate({
+        userId: user.id,
+        payload: {
+          firstName,
+          lastName,
+          gender,
+        },
+      });
+    }
+  };
 
   return (
     <>
@@ -30,7 +73,13 @@ const ProfilePage = (): JSX.Element => {
         barStyle="light-content"
         backgroundColor={Platform.OS === "android" ? "#AF8BEA" : "transparent"}
       />
-      <ThemedView style={styles.container}>
+      <ThemedView
+        style={styles.container}
+        scrollEnabled
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetchUser} />
+        }
+      >
         <ThemedView style={styles.wrapper}>
           <View style={styles.header}>
             <TouchableOpacity
@@ -93,10 +142,33 @@ const ProfilePage = (): JSX.Element => {
               />
 
               <View style={{ width: "100%", gap: Size.calcWidth(16) }}>
-                <ThemeInput label="First Name" placeholder="Enter first name" />
-                <ThemeInput label="Last Name" placeholder="Enter last name" />
-                <ThemeInput label="Gender" placeholder="Enter gender" />
-                <AppButton title="Save" disabled={!edit} />
+                <ThemeInput
+                  editable={edit}
+                  label="First Name"
+                  placeholder="Enter first name"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                />
+                <ThemeInput
+                  editable={edit}
+                  label="Last Name"
+                  placeholder="Enter last name"
+                  value={lastName}
+                  onChangeText={setLastName}
+                />
+                <ThemeInput
+                  editable={edit}
+                  label="Gender"
+                  placeholder="Enter gender"
+                  value={gender}
+                  onChangeText={setGender}
+                />
+                <AppButton
+                  title="Save"
+                  disabled={!edit}
+                  loading={isLoading}
+                  onPress={handleSubmit}
+                />
               </View>
             </View>
           </ThemedView>

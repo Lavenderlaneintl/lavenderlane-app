@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Platform, StatusBar, View } from "react-native";
+import { ActivityIndicator, Platform, StatusBar, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import LogoIcon from "@/assets/svgs/Logo";
 import Size from "@/utils/hooks/useResponsiveSize";
@@ -7,8 +7,25 @@ import Avatar from "@/components/Avatar";
 import { ThemedView } from "@/components/ThemedView";
 import TabBar from "@/components/navigation/Tabbar";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { useInitializeUser } from "@/utils/store/userStore";
 
 export default function TabLayout() {
+  const { isLoading } = useInitializeUser();
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: "#AF8BEA" }}>
       <View
