@@ -14,20 +14,30 @@ const MainScreen = (): JSX.Element => {
   const { isOnboarded } = useSettingsStore();
 
   const [isReady, setIsReady] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Ensure Zustand hydration before accessing state
+  useEffect(() => {
+    const checkHydration = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      setIsHydrated(true);
+    };
+    checkHydration();
+  }, []);
 
   useEffect(() => {
-    const initialize = async () => {
-      // Wait a short delay to ensure hydration
-      await new Promise((resolve) => setTimeout(resolve, 100));
+    if (!isHydrated) return; // Wait for hydration to complete
 
+    const initialize = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
       setIsReady(true);
     };
 
     initialize();
-  }, []);
+  }, [isHydrated]);
 
   useEffect(() => {
-    if (!isReady) return; // Ensure Zustand is ready before navigating
+    if (!isReady || !isHydrated) return; // Ensure Zustand is hydrated and ready
 
     if (isOnboarded) {
       if (authData) {
@@ -38,7 +48,7 @@ const MainScreen = (): JSX.Element => {
     } else {
       router.replace("/OnboardingScreen");
     }
-  }, [isOnboarded, authData, isReady]);
+  }, [isOnboarded, authData, isReady, isHydrated]);
 
   return (
     <View style={styles.container}>

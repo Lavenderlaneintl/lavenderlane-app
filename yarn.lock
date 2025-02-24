@@ -7508,11 +7508,7 @@ __metadata:
     "@expo-google-fonts/plus-jakarta-sans": "npm:^0.2.3"
     "@expo/vector-icons": "npm:^14.0.4"
     "@gorhom/bottom-sheet": "npm:^5.0.6"
-<<<<<<< HEAD
     "@lottiefiles/dotlottie-react": "npm:^0.13.0"
-    "@react-native-async-storage/async-storage": "npm:1.23.1"
-=======
->>>>>>> 226f8d219824d5e58e35eebfe79364c32ad06308
     "@react-native-community/datetimepicker": "npm:^8.2.0"
     "@react-navigation/bottom-tabs": "npm:^7.0.0"
     "@react-navigation/native": "npm:^7.0.0"
