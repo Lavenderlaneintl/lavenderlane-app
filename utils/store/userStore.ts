@@ -12,6 +12,7 @@ import { getUserDetails } from "../apis/user";
 
 export type UserStateType = {
   user: IUserPayload | null;
+  spouse: IUserPayload | null;
   authData: IAuthData | null;
   isLoading: boolean;
   isRefetching: boolean;
@@ -25,6 +26,7 @@ export const useUserStore = create<UserStateType>()(
   persist(
     (set) => ({
       user: null,
+      spouse: null,
       authData: null,
       isLoading: false,
       isRefetching: false,
@@ -72,9 +74,12 @@ export const useInitializeUser = () => {
 
   useEffect(() => {
     if (data) {
-      setUser(data[0]);
+      useUserStore.setState({
+        user: data[0],
+        spouse: data[1],
+      });
     }
-  }, [data, setUser]);
+  }, [data]);
 
   useEffect(() => {
     if (error) clearUser();
