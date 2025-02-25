@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Platform,
   StatusBar,
@@ -44,7 +44,7 @@ const ResetPassword = (): JSX.Element => {
                 type="title"
                 style={{ fontWeight: "600", fontSize: Size.calcWidth(24) }}
               >
-                Forgot Password?
+                Reset Password
               </ThemedText>
               <ThemedText
                 style={{
@@ -53,7 +53,7 @@ const ResetPassword = (): JSX.Element => {
                   fontSize: Size.calcWidth(14),
                 }}
               >
-                Kindly enter your email address
+                Kindly enter a new password
               </ThemedText>
             </View>
 
