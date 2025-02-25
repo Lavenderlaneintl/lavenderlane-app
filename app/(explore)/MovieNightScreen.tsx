@@ -28,6 +28,7 @@ import PlusIcon from "@/assets/svgs/plusicon";
 import { useMutation } from "@tanstack/react-query";
 import { CreateEvent } from "@/utils/apis/events";
 import { showToastable } from "react-native-toastable";
+import { useUserStore } from "@/utils/store/userStore";
 
 const MovieNightScreen = () => {
   const [selectedBackground, setSelectedBackground] = useState<number | null>(
@@ -48,10 +49,12 @@ const MovieNightScreen = () => {
     background: "",
   });
 
-  const [selectedDate, setSelectedDate] = useState("10-02-2025");
+  const { user, spouse } = useUserStore();
+
+  const [selectedDate, setSelectedDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
-  const [selectedTime, setSelectedTime] = useState("08:00 PM");
+  const [selectedTime, setSelectedTime] = useState("");
 
   const showTimePicker = () => setTimePickerVisible(true);
   const hideTimePicker = () => setTimePickerVisible(false);
@@ -115,19 +118,21 @@ const MovieNightScreen = () => {
   const handleSubmit = async () => {
     if (!validateInputs()) return;
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("createdByUserId", "72cc8694-9415-4131-a2f0-c22b4a6ef3b0");
-    formData.append("partnerId", "6e5befe3-f27b-41c9-80f9-e38589d8d229");
-    formData.append("date", selectedDate);
-    formData.append("time", selectedTime);
-    formData.append("eventType", "movieNight");
+    if (user && spouse) {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("createdByUserId", user?.id);
+      formData.append("partnerId", spouse?.id);
+      formData.append("date", selectedDate);
+      formData.append("time", selectedTime);
+      formData.append("eventType", "movieNight");
 
-    formData.append("location", location);
-    formData.append("reminder", reminder.toString());
+      formData.append("location", location);
+      formData.append("reminder", reminder.toString());
 
-    if (formData) {
-      mutate({ payload: formData });
+      if (formData) {
+        mutate({ payload: formData });
+      }
     }
   };
 

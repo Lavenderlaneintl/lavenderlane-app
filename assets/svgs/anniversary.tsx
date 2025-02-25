@@ -1,4 +1,4 @@
-import Svg, { Path, RadialGradient, Stop, SvgProps } from "react-native-svg";
+import Svg, { Defs, Path, RadialGradient, Stop, SvgProps } from "react-native-svg";
 
 const AnniversaryDate = (props: SvgProps) => (
   <Svg width="23" height="26" viewBox="0 0 23 26" fill="none" {...props}>
@@ -184,7 +184,7 @@ const AnniversaryDate = (props: SvgProps) => (
       d="M11.9569 19.3802C10.0707 15.1889 10.2795 11.0063 12.4284 10.0383C12.6799 9.9258 12.9497 9.85962 13.2247 9.84292C12.837 9.81302 12.448 9.87943 12.0923 10.0363C9.94273 11.0043 9.73457 15.1869 11.6208 19.3782C13.288 23.0792 16.0358 25.5501 18.1355 25.41C16.0849 25.2887 13.5339 22.8872 11.9569 19.3802Z"
       fill="#F6CB6E"
     />
-    <defs>
+    <Defs>
       <RadialGradient
         id="paint0_radial_1822_12147"
         cx="0"
@@ -365,7 +365,7 @@ const AnniversaryDate = (props: SvgProps) => (
         <Stop offset="0.68" stopColor="#F5B830" />
         <Stop offset="1" stopColor="#DFA72E" />
       </RadialGradient>
-    </defs>
+    </Defs>
   </Svg>
 );
 

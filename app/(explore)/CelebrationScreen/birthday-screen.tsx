@@ -4,8 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  useColorScheme,
-  Image,
   Text,
   ScrollView,
 } from "react-native";
@@ -17,19 +15,40 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import Size from "@/utils/hooks/useResponsiveSize";
 import ThemeInput from "@/components/ThemedInput";
-import { ThemedTextarea } from "@/components/ThemedTextArea";
 import CustomSwitch from "@/components/AppSwitch";
 import ReminderSpeakerIcon from "@/assets/svgs/reminder";
 import AppButton from "@/components/AppButton";
 import BirthdayCelebrationIcon from "@/assets/svgs/birthday-celebration";
-import { useThemeColor } from "@/utils/hooks/useThemeColor";
+import { useMutation } from "@tanstack/react-query";
+import { CreateCelebration } from "@/utils/apis/celebration";
+import { showToastable } from "react-native-toastable";
+import { useUserStore } from "@/utils/store/userStore";
 
 const BirthdayCelebrationScreen = (): JSX.Element => {
-  const colorScheme = useColorScheme();
-  const cardColor = useThemeColor({ colorName: "card" });
-
-  const [selectedDate, setSelectedDate] = useState("10-02-2025");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const { user } = useUserStore();
+
+  const [reminder, setReminder] = useState(false);
+  const [errors, setErrors] = useState({
+    date: "",
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: CreateCelebration,
+
+    onSuccess: () => {
+      showToastable({
+        message: "Celebration created successfully.",
+        status: "success",
+      });
+    },
+
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -43,6 +62,37 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
     const formattedDate = date.toISOString().split("T")[0];
     setSelectedDate(formattedDate);
     hideDatePicker();
+  };
+
+  const validateInputs = () => {
+    const newErrors = {
+      date: "",
+    };
+
+    let isValid = true;
+
+    if (!selectedDate) {
+      newErrors.date = "Date is required.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateInputs()) return;
+
+    if (user) {
+      mutate({
+        payload: {
+          createdBy: user?.id,
+          date: selectedDate,
+          reminder,
+          celebrationType: "anniversary",
+        },
+      });
+    }
   };
 
   return (
@@ -65,7 +115,7 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
             width: "100%",
             flex: 1,
             gap: Size.calcWidth(18),
-            paddingBottom: Size.calcHeight(90),
+            justifyContent: "space-between",
           }}
         >
           <View style={{ gap: Size.calcWidth(8) }}>
@@ -82,6 +132,7 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
               <TouchableOpacity onPress={showDatePicker}>
                 <ThemeInput
                   label="Date"
+                  errorText={errors.date}
                   value={selectedDate}
                   placeholder="Select date"
                   lightColor="white"
@@ -107,78 +158,58 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
                 />
               )}
             </View>
+          </View>
 
-            {/* <ThemedView
-              style={[styles.wishList, { backgroundColor: cardColor }]}
-            >
-              <ThemedText style={styles.wishListTitle}>
-                Create a Wishlist
-              </ThemedText>
-              <ThemedText style={styles.wishListText}>
-                Start curating what you need for your birthday celebration
-              </ThemedText>
-              <AppButton style={{width: "40%"}} title="+ Create" />
-
+          <View>
+            <View style={[styles.reminder]}>
               <View
                 style={{
-                  backgroundColor: "#AF8BEA",
-                  padding: Size.calcWidth(3),
-                  borderRadius: Size.calcWidth(12),
-                  position: "absolute",
-                  right: Size.calcWidth(6),
-                  top: Size.calcHeight(6),
+                  padding: 10,
+                  borderRadius: 80,
+                  width: Size.calcWidth(44),
+                  height: Size.calcHeight(44),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#F700F60D",
                 }}
               >
-                <Text style={{ fontSize: Size.calcWidth(12), color: "white" }}>
-                  Optional
+                <ReminderSpeakerIcon />
+              </View>
+
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "600",
+                    color: "#373D51",
+                  }}
+                >
+                  Reminder
+                </Text>
+                <Text
+                  style={{
+                    fontSize: Size.calcWidth(14),
+                    color: "#9CA0AF",
+                    fontWeight: "500",
+                  }}
+                >
+                  Push notifications and email
                 </Text>
               </View>
-            </ThemedView> */}
-          </View>
 
-          <View style={[styles.reminder]}>
-            <View
-              style={{
-                padding: 10,
-                borderRadius: 80,
-                width: Size.calcWidth(44),
-                height: Size.calcHeight(44),
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#F700F60D",
-              }}
-            >
-              <ReminderSpeakerIcon />
+              <CustomSwitch
+                value={reminder}
+                onValueChange={() => setReminder(!reminder)}
+              />
             </View>
 
-            <View>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "600",
-                  color: "#373D51",
-                }}
-              >
-                Reminder
-              </Text>
-              <Text
-                style={{
-                  fontSize: Size.calcWidth(14),
-                  color: "#9CA0AF",
-                  fontWeight: "500",
-                }}
-              >
-                Push notifications and email
-              </Text>
-            </View>
-
-            <CustomSwitch value={false} onValueChange={() => {}} />
+            <AppButton
+              loading={isPending}
+              onPress={handleSubmit}
+              style={{ marginVertical: Size.calcHeight(15) }}
+              title="Done"
+            />
           </View>
-
-          <AppButton
-            style={{ marginVertical: Size.calcHeight(15) }}
-            title="Done"
-          />
         </ScrollView>
       </ThemedView>
     </ThemedView>

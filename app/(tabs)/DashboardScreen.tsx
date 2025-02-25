@@ -1,5 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Platform, FlatList , RefreshControl} from "react-native";
+import {
+  View,
+  StyleSheet,
+  Platform,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import { Circle } from "react-native-progress";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -28,14 +34,13 @@ const CircularProgress = ({ progress = 75 }: { progress: number }) => (
 );
 
 const DashboardScreen = () => {
-  const { refetchUser, isRefetching } = useUserStore();
+  const { user, refetchUser, isRefetching } = useUserStore();
   const router = useRouter();
 
   const { data = [] } = useQuery({
     queryKey: ["events"],
-    queryFn: () => GetEvents({ coupleId: "lavenders_Ka6ZdLhj" }),
+    queryFn: () => user && GetEvents({ coupleId: user?.coupleId }),
   });
-
 
   return (
     <ThemedView
@@ -84,8 +89,7 @@ const DashboardScreen = () => {
           Upcoming Events
         </ThemedText>
 
-        {data.length > 0 ? (
-          // Show FlatList if data exists
+        {data && data?.length > 0 ? (
           <FlatList
             data={data}
             keyExtractor={(item) => item.id}
@@ -102,7 +106,6 @@ const DashboardScreen = () => {
             }
           />
         ) : (
-          // Show Empty State if no data
           <View style={styles.emptyState}>
             <FileIcon />
             <ThemedText style={styles.emptyText}>

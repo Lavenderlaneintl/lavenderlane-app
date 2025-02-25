@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  useColorScheme,
   Image,
   Text,
   ScrollView,
@@ -27,10 +26,9 @@ import { CreateCelebration } from "@/utils/apis/celebration";
 import { showToastable } from "react-native-toastable";
 
 const WeddingAnniversaryScreen = (): JSX.Element => {
-  const colorScheme = useColorScheme();
-  const { authData } = useUserStore();
+  const { user } = useUserStore();
 
-  const [selectedDate, setSelectedDate] = useState("10-02-2025");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const [note, setNote] = useState("");
@@ -46,7 +44,7 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
 
     onSuccess: () => {
       showToastable({
-        message: "Your celebration has been created successfully",
+        message: "Your anniversary celebration has been created successfully",
         status: "success",
       });
     },
@@ -95,10 +93,10 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
   const handleSubmit = async () => {
     if (!validateInputs()) return;
 
-    if (authData) {
+    if (user) {
       mutate({
         payload: {
-          createdBy: authData?.id,
+          createdBy: user?.id,
           note,
           date: selectedDate,
           reminder,
@@ -154,6 +152,7 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
                   label="Date"
                   value={selectedDate}
                   placeholder="Select date"
+                  errorText={errors.date}
                   rightIcon={
                     <Ionicons
                       name="chevron-down-outline"
@@ -165,12 +164,6 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
                   editable={false}
                 />
               </TouchableOpacity>
-
-              {errors.date && (
-                <ThemedText style={styles.errorText} type="default">
-                  {errors.date}
-                </ThemedText>
-              )}
 
               {isDatePickerVisible && (
                 <DateTimePickerModal
@@ -188,15 +181,10 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
                 lightColor="white"
                 value={note}
                 onChangeText={setNote}
+                errorText={errors.note}
                 label="Write a short love note to your partner"
                 placeholder="Start typing..."
               />
-
-              {errors.note && (
-                <ThemedText style={styles.errorText} type="default">
-                  {errors.note}
-                </ThemedText>
-              )}
             </View>
           </View>
 
