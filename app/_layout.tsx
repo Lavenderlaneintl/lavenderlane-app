@@ -61,19 +61,20 @@ export default function RootLayout() {
               <Stack.Screen name="index" />
               <Stack.Screen name="+not-found" />
             </Stack>
+
+            <StatusBar
+              translucent
+              backgroundColor="transparent"
+              barStyle={Platform.OS === "android" ? "light-content" : "default"}
+            />
+            <Toastable
+              duration={5000}
+              messageStyle={{
+                textAlign: "center",
+              }}
+            />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle={Platform.OS === "android" ? "light-content" : "default"}
-        />
-        <Toastable
-          duration={5000}
-          messageStyle={{
-            textAlign: "center",
-          }}
-        />
       </QueryClientProvider>
     </ThemeProvider>
   );
