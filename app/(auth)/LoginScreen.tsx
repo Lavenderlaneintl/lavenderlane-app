@@ -49,7 +49,7 @@ const LoginScreen = (): JSX.Element => {
     mutationFn: (payload: IRegisterPayload) => UserLogin(payload),
 
     onSuccess: (data) => {
-      console.log(data)
+      console.log(data);
       Promise.all([
         setAuthData({
           id: data?.id,
@@ -179,7 +179,11 @@ const LoginScreen = (): JSX.Element => {
         disabled={!request}
       />
       <TouchableOpacity
-        style={{ marginBottom: Size.calcHeight(20), flexDirection: "row" }}
+        style={{
+          marginBottom: Size.calcHeight(20),
+          marginTop: Size.calcHeight(16),
+          flexDirection: "row",
+        }}
         onPress={() => router.push("/RegisterScreen")}
       >
         <Text style={styles.texts}>Don't have an account?</Text>
@@ -190,6 +194,19 @@ const LoginScreen = (): JSX.Element => {
           ]}
         >
           Register
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => router.push("/(auth)/RequestPasswordResetScreen")}
+      >
+        <Text
+          style={[
+            styles.texts,
+            { color: "#FFFFFF", fontWeight: 500, fontSize: Size.calcWidth(16) },
+          ]}
+        >
+          Forgot Password?
         </Text>
       </TouchableOpacity>
     </ImageBackground>
