@@ -25,6 +25,10 @@ import { customBackgrounds } from "@/utils/data";
 import CheckedIcon from "@/assets/svgs/checked";
 import UncheckedIcon from "@/assets/svgs/unchecked";
 import PlusIcon from "@/assets/svgs/plusicon";
+import { useMutation } from "@tanstack/react-query";
+import { CreateEvent } from "@/utils/apis/events";
+import { showToastable } from "react-native-toastable";
+import { useUserStore } from "@/utils/store/userStore";
 
 const MovieNightScreen = () => {
   const [selectedBackground, setSelectedBackground] = useState<number | null>(
@@ -33,6 +37,20 @@ const MovieNightScreen = () => {
 
   const [backgrounds, setCustomBackgrounds] = useState(customBackgrounds);
 
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [reminder, setReminder] = useState(false);
+
+  const [errors, setErrors] = useState({
+    title: "",
+    date: "",
+    time: "",
+    location: "",
+    background: "",
+  });
+
+  const { user, spouse } = useUserStore();
+
   const [selectedDate, setSelectedDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
@@ -40,6 +58,83 @@ const MovieNightScreen = () => {
 
   const showTimePicker = () => setTimePickerVisible(true);
   const hideTimePicker = () => setTimePickerVisible(false);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: CreateEvent,
+
+    onSuccess: () => {
+      showToastable({
+        message: "Movie night event created!",
+        status: "success",
+      });
+      router.push("/DashboardScreen");
+    },
+
+    onError: (error: any) => {
+      console.log({ error });
+    },
+  });
+
+  const validateInputs = () => {
+    const newErrors = {
+      title: "",
+      date: "",
+      time: "",
+      location: "",
+      background: "",
+    };
+
+    let isValid = true;
+
+    if (!title.trim()) {
+      newErrors.title = "Movie title is required.";
+      isValid = false;
+    }
+
+    if (!selectedDate) {
+      newErrors.date = "Date is required.";
+      isValid = false;
+    }
+
+    if (!selectedTime) {
+      newErrors.time = "Time is required.";
+      isValid = false;
+    }
+
+    if (!location.trim()) {
+      newErrors.location = "Location is required.";
+      isValid = false;
+    }
+
+    if (selectedBackground === null) {
+      newErrors.background = "Please select a background.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateInputs()) return;
+
+    if (user && spouse) {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("createdByUserId", user?.id);
+      formData.append("partnerId", spouse?.id);
+      formData.append("date", selectedDate);
+      formData.append("time", selectedTime);
+      formData.append("eventType", "movieNight");
+
+      formData.append("location", location);
+      formData.append("reminder", reminder.toString());
+
+      if (formData) {
+        mutate({ payload: formData });
+      }
+    }
+  };
 
   const handleAddImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -131,8 +226,11 @@ const MovieNightScreen = () => {
                 <ThemeInput
                   style={styles.input}
                   placeholder="Enter movie title"
+                  onChangeText={setTitle}
                   lightColor="white"
                   darkColor="white"
+                  value={title}
+                  errorText={errors.title}
                 />
               </View>
 
@@ -156,6 +254,12 @@ const MovieNightScreen = () => {
                     editable={false}
                   />
                 </TouchableOpacity>
+
+                {errors.date && (
+                  <ThemedText style={styles.errorText} type="default">
+                    {errors.date}
+                  </ThemedText>
+                )}
 
                 {isDatePickerVisible && (
                   <DateTimePickerModal
@@ -189,6 +293,12 @@ const MovieNightScreen = () => {
                   />
                 </TouchableOpacity>
 
+                {errors.time && (
+                  <ThemedText style={styles.errorText} type="default">
+                    {errors.time}
+                  </ThemedText>
+                )}
+
                 {isTimePickerVisible && (
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
@@ -205,8 +315,10 @@ const MovieNightScreen = () => {
 
                 <ThemeInput
                   style={styles.input}
+                  onChangeText={setLocation}
                   placeholder="Enter desired location"
                   lightColor="white"
+                  errorText={errors.location}
                   darkColor="white"
                 />
               </View>
@@ -258,6 +370,12 @@ const MovieNightScreen = () => {
                     );
                   }}
                 />
+
+                {errors.background && (
+                  <ThemedText style={styles.errorText} type="default">
+                    {errors.background}
+                  </ThemedText>
+                )}
               </View>
 
               <View style={[styles.reminder]}>
@@ -296,12 +414,19 @@ const MovieNightScreen = () => {
                   </Text>
                 </View>
 
-                <CustomSwitch value={false} onValueChange={() => {}} />
+                <CustomSwitch
+                  value={reminder}
+                  onValueChange={() => setReminder(!reminder)}
+                />
               </View>
             </ScrollView>
 
             <View style={{ marginTop: Size.calcHeight(20) }}>
-              <AppButton title="Save" />
+              <AppButton
+                loading={isPending}
+                onPress={handleSubmit}
+                title="Save"
+              />
             </View>
           </View>
         </ThemedView>
@@ -413,5 +538,11 @@ const styles = StyleSheet.create({
     fontSize: Size.calcWidth(16),
     fontWeight: "500",
     marginBottom: Size.calcHeight(12),
+  },
+
+  errorText: {
+    color: "red",
+    fontSize: Size.calcAverage(16),
+    fontWeight: "500",
   },
 });

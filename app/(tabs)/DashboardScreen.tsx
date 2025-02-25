@@ -1,11 +1,21 @@
 import React from "react";
-import { View, StyleSheet, Platform, RefreshControl } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Platform,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import { Circle } from "react-native-progress";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import AppButton from "@/components/AppButton";
 import FileIcon from "@/assets/svgs/File";
 import Size from "@/utils/hooks/useResponsiveSize";
+import { useQuery } from "@tanstack/react-query";
+import { GetEvents } from "@/utils/apis/events";
+import UpcomingEventCard from "@/components/upcoming-event-card";
+import UpcomingDateNightCard from "@/components/upcoming-date-night";
 import { useUserStore } from "@/utils/store/userStore";
 import { useRouter } from "expo-router";
 
@@ -24,8 +34,13 @@ const CircularProgress = ({ progress = 75 }: { progress: number }) => (
 );
 
 const DashboardScreen = () => {
-  const { refetchUser, isRefetching } = useUserStore();
+  const { user, refetchUser, isRefetching } = useUserStore();
   const router = useRouter();
+
+  const { data = [] } = useQuery({
+    queryKey: ["events"],
+    queryFn: () => user && GetEvents({ coupleId: user?.coupleId }),
+  });
 
   return (
     <ThemedView
@@ -40,14 +55,14 @@ const DashboardScreen = () => {
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
               <ThemedText
-                darkColor="##373D51"
+                darkColor="#373D51"
                 type="title"
                 style={styles.cardTitle}
               >
                 Complete your Profile
               </ThemedText>
               <ThemedText
-                darkColor="##373D51"
+                darkColor="#373D51"
                 type="subtitle"
                 style={styles.cardSubtitle}
               >
@@ -67,24 +82,44 @@ const DashboardScreen = () => {
         </View>
       </View>
 
+      {/* Upcoming Events Section */}
       {/* Upcoming Events */}
       <View style={styles.eventsSection}>
         <ThemedText type="title" style={styles.sectionTitle}>
           Upcoming Events
         </ThemedText>
-        <View style={styles.emptyState}>
-          <FileIcon />
-          <ThemedText style={styles.emptyText}>
-            You are yet to add events
-          </ThemedText>
-          <AppButton
-            title="Add Events ✨"
-            style={{
-              width: Size.calcWidth(160),
-              height: Size.calcHeight(46),
-            }}
+
+        {data && data?.length > 0 ? (
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => (
+              <View style={{ height: Size.calcHeight(18) }} />
+            )}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) =>
+              item?.eventType === "dateNight" ? (
+                <UpcomingDateNightCard {...item} />
+              ) : (
+                <UpcomingEventCard {...item} />
+              )
+            }
           />
-        </View>
+        ) : (
+          <View style={styles.emptyState}>
+            <FileIcon />
+            <ThemedText style={styles.emptyText}>
+              You are yet to add events
+            </ThemedText>
+            <AppButton
+              title="Add Events ✨"
+              style={{
+                width: Size.calcWidth(160),
+                height: Size.calcHeight(46),
+              }}
+            />
+          </View>
+        )}
       </View>
     </ThemedView>
   );
@@ -149,6 +184,7 @@ const styles = StyleSheet.create({
   },
 
   eventsSection: {
+    flex: 1,
     marginTop: Size.calcHeight(24),
   },
 
@@ -159,6 +195,7 @@ const styles = StyleSheet.create({
   },
 
   emptyState: {
+    flex: 1,
     padding: Size.calcWidth(16),
     alignItems: "center",
     justifyContent: "center",

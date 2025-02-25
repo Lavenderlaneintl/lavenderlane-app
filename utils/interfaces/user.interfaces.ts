@@ -1,9 +1,11 @@
+export type UserGender = "Male" | "Female";
+
 export interface IUserPayload {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
-  gender: "Male" | "Female";
+  gender: UserGender;
   username: string;
   coupleId: string;
   createdAt: string;
