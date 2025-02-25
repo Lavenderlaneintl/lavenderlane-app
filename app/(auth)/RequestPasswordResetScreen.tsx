@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Platform,
   StatusBar,
@@ -18,7 +18,16 @@ import AppButton from "@/components/AppButton";
 
 import ThemeInput from "@/components/ThemedInput";
 
-const ResetPassword = (): JSX.Element => {
+const RequestResetPassword = (): JSX.Element => {
+  const [email, setEmail] = useState("");
+
+  const handleRequestReset = () => {
+    router.push({
+      pathname: "/(auth)/VerifyPasswordResetToken",
+      params: { email },
+    });
+  };
+
   return (
     <>
       {Platform.OS === "ios" && <View style={styles.statusBarBackground} />}
@@ -44,7 +53,7 @@ const ResetPassword = (): JSX.Element => {
                 type="title"
                 style={{ fontWeight: "600", fontSize: Size.calcWidth(24) }}
               >
-                Reset Password
+                Forgot Password?
               </ThemedText>
               <ThemedText
                 style={{
@@ -58,8 +67,12 @@ const ResetPassword = (): JSX.Element => {
             </View>
 
             <View style={{ width: "100%", gap: Size.calcWidth(16) }}>
-              <ThemeInput placeholder="Enter your email address" />
-              <AppButton title="Continue" disabled />
+              <ThemeInput
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email address"
+              />
+              <AppButton title="Continue" onPress={handleRequestReset} />
             </View>
           </ThemedView>
         </ThemedView>
@@ -68,7 +81,7 @@ const ResetPassword = (): JSX.Element => {
   );
 };
 
-export default ResetPassword;
+export default RequestResetPassword;
 
 const styles = StyleSheet.create({
   statusBarBackground: {

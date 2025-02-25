@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserStateType, useUserStore } from "../store/userStore";
+import { UserStateType } from "../store/userStore";
 import { storage } from "./appStorage";
 import STORE_KEYS from "../constants/storeKeys";
 
