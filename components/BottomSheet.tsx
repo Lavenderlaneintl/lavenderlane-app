@@ -32,6 +32,7 @@ const ThemedBottomSheet = forwardRef<
       children,
       contentStyle,
       enableDynamicSizing = false,
+      title,
     },
     ref
   ) => {
@@ -42,9 +43,6 @@ const ThemedBottomSheet = forwardRef<
       props: {
         dark: Colors.dark.card,
       },
-    });
-    const text = useThemeColor({
-      colorName: "text",
     });
 
     // Expose control methods through ref
@@ -80,7 +78,7 @@ const ThemedBottomSheet = forwardRef<
               fontSize: Size.calcWidth(18),
             }}
           >
-            Sensitive talk
+            {title}
           </ThemedText>
           <TouchableOpacity
             style={styles.closeButton}
@@ -90,7 +88,7 @@ const ThemedBottomSheet = forwardRef<
             <MaterialIcons
               name="close"
               size={Size.calcAverage(20)}
-              color={text}
+              color="#fff"
             />
           </TouchableOpacity>
         </View>

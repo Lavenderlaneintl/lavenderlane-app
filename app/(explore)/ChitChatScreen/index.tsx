@@ -84,7 +84,11 @@ const ChitChatScreen = (): JSX.Element => {
           </View>
         </ThemedView>
       </ThemedView>
-      <ThemedBottomSheet ref={sheetRef} snapPoints={[Size.calcHeight(420)]}>
+      <ThemedBottomSheet
+        ref={sheetRef}
+        snapPoints={[Size.calcHeight(420)]}
+        title="Sensitive talk"
+      >
         <View style={styles.popWrapper}>
           <SensitiveSvg />
           <ThemedText
