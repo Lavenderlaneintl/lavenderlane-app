@@ -62,7 +62,7 @@ export const exploreFeatures: IAppFeatures[] = [
     title: "Lavender",
     icon: require("@/assets/images/lavender-purple.png"),
     color: "#592E8333",
-    route: "/ComingSoonScreen",
+    route: "/LavenderAIScreen",
   },
 ];
 

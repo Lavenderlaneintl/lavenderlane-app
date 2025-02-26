@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { DarkTheme, LightTheme } from "@/utils/constants/Colors";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import "react-native-get-random-values";
 
 import {
   useFonts,
