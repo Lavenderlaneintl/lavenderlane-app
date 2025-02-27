@@ -1,14 +1,9 @@
 import axios from "axios";
-import { UserStateType } from "../store/userStore";
-import { storage } from "./appStorage";
-import STORE_KEYS from "../constants/storeKeys";
+import { useUserStore } from "../store/userStore";
 
 const BASE_URL = "https://lavenderlaneint.onrender.com";
 
-const data = storage.getString(STORE_KEYS.userData);
-const authData: UserStateType = data ? JSON.parse(data) : undefined;
-
-const token = authData?.authData?.token;
+const token = useUserStore.getState().authData?.token;
 
 // Create an Axios instance
 const apiClient = axios.create({

@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { DarkTheme, LightTheme } from "@/utils/constants/Colors";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import "react-native-get-random-values";
 
 import {
   useFonts,
@@ -61,19 +62,20 @@ export default function RootLayout() {
               <Stack.Screen name="index" />
               <Stack.Screen name="+not-found" />
             </Stack>
+
+            <StatusBar
+              translucent
+              backgroundColor="transparent"
+              barStyle={Platform.OS === "android" ? "light-content" : "default"}
+            />
+            <Toastable
+              duration={5000}
+              messageStyle={{
+                textAlign: "center",
+              }}
+            />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle={Platform.OS === "android" ? "light-content" : "default"}
-        />
-        <Toastable
-          duration={5000}
-          messageStyle={{
-            textAlign: "center",
-          }}
-        />
       </QueryClientProvider>
     </ThemeProvider>
   );

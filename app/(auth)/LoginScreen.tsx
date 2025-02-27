@@ -49,7 +49,6 @@ const LoginScreen = (): JSX.Element => {
     mutationFn: (payload: IRegisterPayload) => UserLogin(payload),
 
     onSuccess: (data) => {
-      console.log(data);
       Promise.all([
         setAuthData({
           id: data?.id,

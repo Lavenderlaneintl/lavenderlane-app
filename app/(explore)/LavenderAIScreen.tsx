@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -17,97 +17,104 @@ import Size from "@/utils/hooks/useResponsiveSize";
 import { useThemeColor } from "@/utils/hooks/useThemeColor";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import {
-  ConversationTypeEnum,
-  IMessage,
-  MessageTypeEnum,
-} from "@/utils/interfaces/message.interfaces";
+  IAiMessage,
+  IOpenAiMessage,
+  OpenAiRoleEnum,
+} from "@/utils/interfaces/lavenderAi.interfaces";
 import { useUserStore } from "@/utils/store/userStore";
-import { io } from "socket.io-client";
+import { formatDate, generateUniqueId, parseDateString } from "@/utils/helpers";
+import { useMutation } from "@tanstack/react-query";
+import { fetchOpenAiResponse } from "@/utils/apis/aiChat";
 
-const SensitiveTalkScreen = (): JSX.Element => {
+const LavenderAIScreen = (): JSX.Element => {
   const colorScheme = useColorScheme();
   const cardColor = useThemeColor({ colorName: "card" });
-  const socket = useRef<any>(null);
-  const { authData, user } = useUserStore();
+  const user = useUserStore((state) => state.user);
 
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<IAiMessage[]>([
+    {
+      id: generateUniqueId(),
+      time: parseDateString(new Date().toISOString()),
+      message: `Hello ${user?.firstName || ""}! How can I assist you today?`,
+      isUser: false,
+    },
+  ]);
 
   const [input, setInput] = useState("");
   const flatListRef = useRef<FlatList>(null);
 
-  // Initialize socket connection
-  useEffect(() => {
-    socket.current = io("https://lavenderlaneint.onrender.com", {
-      query: {
-        token: authData?.token ?? "",
-      },
-    });
+  const { mutate: handleAiResponse } = useMutation({
+    mutationFn: (conversation: IOpenAiMessage[]) =>
+      fetchOpenAiResponse(conversation),
 
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-      }
-    };
-  }, []);
-
-  // Listen for incoming messages
-  useEffect(() => {
-    if (!socket.current) return;
-
-    const handleIncomingMessage = (message: IMessage) => {
-      const newMessage: IMessage = {
-        ...message,
-        id: Date.now().toString(),
-        isSender: false,
-      };
-      setMessages((prev) => [...prev, newMessage]);
-
+    onSuccess: (aiResponse) => {
+      // Replace the "typing" message with the actual AI response.
+      setMessages((prevMessages) => {
+        const updated = prevMessages.filter(
+          (msg) => msg.message !== "Lavender is typing..."
+        );
+        return [
+          ...updated,
+          {
+            id: generateUniqueId(),
+            isUser: false,
+            message: aiResponse,
+            time: parseDateString(new Date().toISOString()),
+          },
+        ];
+      });
+      // Optionally, scroll to the bottom after a short delay.
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
-    };
+    },
 
-    socket.current.on("sendMessage", handleIncomingMessage);
-
-    return () => {
-      socket.current?.off("sendMessage", handleIncomingMessage);
-    };
-  }, []);
+    onError: (error: any) => {
+      console.error(error);
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg.message !== "Lavender is typing...")
+      );
+    },
+  });
 
   const sendMessage = useCallback(() => {
     if (input.trim().length === 0) return;
 
-    const payload = {
+    // Create the new user message.
+    const newUserMessage: IAiMessage = {
       message: input,
-      conversationType: ConversationTypeEnum.ChitChat,
-      coupleId: user?.coupleId ?? "",
-      partnerId: user?.syncedWith ?? "",
-      senderId: authData?.id ?? "",
-      type: MessageTypeEnum.Text,
+      id: generateUniqueId(),
+      time: parseDateString(new Date().toISOString()),
+      isUser: true,
     };
 
-    const newMessage: IMessage = {
-      ...payload,
-      id: Date.now().toString(),
-      isSender: true,
-    };
-
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-    // Send message through socket
-    if (socket.current) {
-      console.log({ payload });
-
-      socket.current.emit("sendMessage", payload);
-    }
-
+    // Update messages immediately with the new user message.
+    const updatedMessages = [...messages, newUserMessage];
+    setMessages(updatedMessages);
     setInput("");
     Keyboard.dismiss();
 
-    setTimeout(() => {
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }, 100);
-  }, [input]);
+    // Add a "typing" indicator for the AI response.
+    const typingMessage: IAiMessage = {
+      id: generateUniqueId(),
+      isUser: false,
+      message: "Lavender is typing...",
+      time: parseDateString(new Date().toISOString()),
+    };
+    setMessages([...updatedMessages, typingMessage]);
+
+    // Build conversation history from the updated messages (exclude any existing typing messages).
+    const conversationHistory: IOpenAiMessage[] = updatedMessages
+      .filter((msg) => msg.message !== "Lavender is typing...")
+      .slice(-100) // keep last 100 messages to avoid token overflow
+      .map((msg) => ({
+        role: msg.isUser ? OpenAiRoleEnum.User : OpenAiRoleEnum.Assistant,
+        content: msg.message,
+      }));
+
+    // Call the API with the conversation history.
+    handleAiResponse(conversationHistory);
+  }, [input, messages, handleAiResponse]);
 
   return (
     <ThemedView style={styles.container}>
@@ -121,7 +128,7 @@ const SensitiveTalkScreen = (): JSX.Element => {
               <Ionicons name="chevron-back-outline" size={24} color="white" />
             </TouchableOpacity>
             <ThemedView style={styles.headerTitleContainer}>
-              <ThemedText style={styles.headerTitle}>Sensitive Talk</ThemedText>
+              <ThemedText style={styles.headerTitle}>AI Counselor</ThemedText>
             </ThemedView>
           </View>
         </View>
@@ -130,38 +137,45 @@ const SensitiveTalkScreen = (): JSX.Element => {
           ref={flatListRef}
           data={messages}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }: { item: IMessage }) => (
-            <View
-              style={[
-                styles.messageBubble,
-                item.isSender
-                  ? styles.myMessage
-                  : {
-                      alignSelf: "flex-start",
-                      backgroundColor: cardColor,
-                    },
-              ]}
-            >
-              <ThemedText
-                lightColor="#373D51"
-                style={
-                  item.isSender && colorScheme === "light"
-                    ? { color: "#fff" }
-                    : {}
-                }
+          renderItem={({ item }: { item: IAiMessage }) => (
+            <View>
+              <View
+                style={[
+                  styles.messageBubble,
+                  item.isUser
+                    ? styles.myMessage
+                    : { alignSelf: "flex-start", backgroundColor: cardColor },
+                ]}
               >
-                {item.message}
+                <ThemedText
+                  lightColor="#373D51"
+                  style={
+                    item.isUser && colorScheme === "light"
+                      ? { color: "#fff" }
+                      : {}
+                  }
+                >
+                  {item.message}
+                </ThemedText>
+              </View>
+              <ThemedText
+                style={{
+                  fontSize: Size.calcAverage(13),
+                  textAlign: item.isUser ? "right" : "left",
+                  lineHeight: 0,
+                }}
+              >
+                {formatDate(item.time)}
               </ThemedText>
             </View>
           )}
+          style={{ paddingTop: Size.calcHeight(15) }}
         />
 
         <View
           style={[
             styles.inputContainer,
-            {
-              borderColor: colorScheme === "light" ? "#EEFAF8" : "#333",
-            },
+            { borderColor: colorScheme === "light" ? "#EEFAF8" : "#333" },
           ]}
         >
           <TextInput
@@ -188,7 +202,7 @@ const SensitiveTalkScreen = (): JSX.Element => {
   );
 };
 
-export default SensitiveTalkScreen;
+export default LavenderAIScreen;
 
 const styles = StyleSheet.create({
   container: {
