@@ -43,58 +43,78 @@ const LavenderAIScreen = (): JSX.Element => {
   const [input, setInput] = useState("");
   const flatListRef = useRef<FlatList>(null);
 
-  const {
-    data,
-    isPending,
-    mutate: handleAiResponse,
-  } = useMutation({
-    mutationFn: (payload: IOpenAiMessage[]) => fetchOpenAiResponse(payload),
+  const { mutate: handleAiResponse } = useMutation({
+    mutationFn: (conversation: IOpenAiMessage[]) =>
+      fetchOpenAiResponse(conversation),
 
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: (aiResponse) => {
+      // Replace the "typing" message with the actual AI response.
+      setMessages((prevMessages) => {
+        const updated = prevMessages.filter(
+          (msg) => msg.message !== "Lavender is typing..."
+        );
+        return [
+          ...updated,
+          {
+            id: generateUniqueId(),
+            isUser: false,
+            message: aiResponse,
+            time: parseDateString(new Date().toISOString()),
+          },
+        ];
+      });
+      // Optionally, scroll to the bottom after a short delay.
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
     },
 
     onError: (error: any) => {
-      console.log({ error });
+      console.error(error);
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg.message !== "Lavender is typing...")
+      );
     },
   });
 
   const sendMessage = useCallback(() => {
     if (input.trim().length === 0) return;
 
-    const newMessage: IAiMessage = {
+    // Create the new user message.
+    const newUserMessage: IAiMessage = {
       message: input,
       id: generateUniqueId(),
       time: parseDateString(new Date().toISOString()),
       isUser: true,
     };
 
-    // Add user message to local state
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    // Update messages immediately with the new user message.
+    const updatedMessages = [...messages, newUserMessage];
+    setMessages(updatedMessages);
     setInput("");
     Keyboard.dismiss();
 
-    // Create a "typing..." message for the bot
-    const botTypingMessage: IAiMessage = {
+    // Add a "typing" indicator for the AI response.
+    const typingMessage: IAiMessage = {
       id: generateUniqueId(),
       isUser: false,
       message: "Lavender is typing...",
       time: parseDateString(new Date().toISOString()),
     };
+    setMessages([...updatedMessages, typingMessage]);
 
-    setMessages((prev) => [...prev, botTypingMessage]);
+    // Build conversation history from the updated messages (exclude any existing typing messages).
+    const conversationHistory: IOpenAiMessage[] = updatedMessages
+      .filter((msg) => msg.message !== "Lavender is typing...")
+      .slice(-100) // keep last 100 messages to avoid token overflow
+      .map((msg) => ({
+        role: msg.isUser ? OpenAiRoleEnum.User : OpenAiRoleEnum.Assistant,
+        content: msg.message,
+      }));
 
-    // Prepare conversation history, keeping last 10 messages
-    const formattedMessages = messages.slice(-100).map((msg) => ({
-      role: msg.isUser ? OpenAiRoleEnum.User : OpenAiRoleEnum.Assistant,
-      content: msg.message,
-    }));
-
-    // Add new user message to history before sending
-    formattedMessages.push({ role: OpenAiRoleEnum.User, content: input });
-
-    handleAiResponse(formattedMessages);
-  }, [input, messages]);
+    // Call the API with the conversation history.
+    handleAiResponse(conversationHistory);
+  }, [input, messages, handleAiResponse]);
 
   return (
     <ThemedView style={styles.container}>
@@ -124,10 +144,7 @@ const LavenderAIScreen = (): JSX.Element => {
                   styles.messageBubble,
                   item.isUser
                     ? styles.myMessage
-                    : {
-                        alignSelf: "flex-start",
-                        backgroundColor: cardColor,
-                      },
+                    : { alignSelf: "flex-start", backgroundColor: cardColor },
                 ]}
               >
                 <ThemedText
@@ -158,9 +175,7 @@ const LavenderAIScreen = (): JSX.Element => {
         <View
           style={[
             styles.inputContainer,
-            {
-              borderColor: colorScheme === "light" ? "#EEFAF8" : "#333",
-            },
+            { borderColor: colorScheme === "light" ? "#EEFAF8" : "#333" },
           ]}
         >
           <TextInput

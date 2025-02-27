@@ -4,6 +4,16 @@ export enum OpenAiRoleEnum {
   Assistant = "assistant",
 }
 
+export enum OpenAiModelEnum {
+  GPT_3_5_TURBO = "gpt-3.5-turbo",
+  GPT_4 = "gpt-4",
+  DAVINCI = "davinci",
+  CURIE = "curie",
+  BABBAGE = "babbage",
+  ADA = "ada",
+  GPT_4O_MINI = "gpt-4o-mini",
+}
+
 export interface IOpenAiMessage {
   role: OpenAiRoleEnum;
   content: string;
@@ -26,7 +36,7 @@ export interface IOpenAiChatResponse {
 }
 
 export interface IOpenAiChatRequest {
-  model: string;
+  model: OpenAiModelEnum;
   messages: IOpenAiMessage[];
   temperature?: number;
   max_tokens?: number;
