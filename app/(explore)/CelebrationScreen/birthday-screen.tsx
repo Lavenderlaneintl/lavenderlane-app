@@ -43,6 +43,7 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
         message: "Celebration created successfully.",
         status: "success",
       });
+      router.replace("/DashboardScreen")
     },
 
     onError: (error) => {

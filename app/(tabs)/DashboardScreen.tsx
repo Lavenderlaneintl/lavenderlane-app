@@ -96,6 +96,8 @@ const DashboardScreen = () => {
             ItemSeparatorComponent={() => (
               <View style={{ height: Size.calcHeight(18) }} />
             )}
+            contentContainerStyle={{ paddingBottom: Size.calcHeight(60) }}  
+            scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) =>
               item?.eventType === "dateNight" ? (

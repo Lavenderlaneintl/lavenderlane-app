@@ -129,6 +129,17 @@ const DateNightScreen = () => {
 
       formData.append("location", location);
       formData.append("reminder", reminder.toString());
+      // const selectedBackgroundItem = backgrounds.find(
+      //   (item) => item.id === selectedBackground
+      // );
+
+      // if (selectedBackgroundItem) {
+      //   formData.append("eventBgImage", {
+      //     uri: selectedBackgroundItem.background,
+      //     type: "image/jpeg",
+      //     name: `background-${selectedBackgroundItem.id}.jpg`,
+      //   } as any);
+      // }
 
       if (formData) {
         mutate({ payload: formData });

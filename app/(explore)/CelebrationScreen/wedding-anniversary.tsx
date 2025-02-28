@@ -44,9 +44,10 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
 
     onSuccess: () => {
       showToastable({
-        message: "Your anniversary celebration has been created successfully",
+        message: "Celebration created successfully.",
         status: "success",
       });
+      router.replace("/DashboardScreen")
     },
 
     onError: (error) => {
