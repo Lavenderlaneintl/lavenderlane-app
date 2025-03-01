@@ -43,6 +43,7 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
         message: "Celebration created successfully.",
         status: "success",
       });
+      router.replace("/DashboardScreen")
     },
 
     onError: (error) => {
@@ -135,7 +136,6 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
                   errorText={errors.date}
                   value={selectedDate}
                   placeholder="Select date"
-                  lightColor="white"
                   rightIcon={
                     <Ionicons
                       name="chevron-down-outline"
@@ -143,7 +143,6 @@ const BirthdayCelebrationScreen = (): JSX.Element => {
                       color="#9CA0AF"
                     />
                   }
-                  darkColor="white"
                   editable={false}
                 />
               </TouchableOpacity>

@@ -7,6 +7,20 @@ export function CreateEvent({ payload }: { payload: FormData }) {
   });
 }
 
+export function CreateFeedback({
+  payload,
+  id,
+}: {
+  payload: { emoji: string; comment: string };
+  id: string;
+}) {
+  return apiClient
+    .post<any>(`/event/${id}/feedback`, payload)
+    .then((response) => {
+      return response.data;
+    });
+}
+
 export function GetEvents({ coupleId }: { coupleId: string }) {
   return apiClient
     .get<EventsData[]>(`/event?coupleId=${coupleId}`)

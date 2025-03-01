@@ -18,6 +18,7 @@ import UpcomingEventCard from "@/components/upcoming-event-card";
 import UpcomingDateNightCard from "@/components/upcoming-date-night";
 import { useUserStore } from "@/utils/store/userStore";
 import { useRouter } from "expo-router";
+import EventFeedbackCard from "@/components/eventfeedback";
 
 const CircularProgress = ({ progress = 75 }: { progress: number }) => (
   <View style={styles.circularProgressContainer}>
@@ -96,9 +97,13 @@ const DashboardScreen = () => {
             ItemSeparatorComponent={() => (
               <View style={{ height: Size.calcHeight(18) }} />
             )}
+            contentContainerStyle={{ paddingBottom: Size.calcHeight(60) }}
+            scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) =>
-              item?.eventType === "dateNight" ? (
+              !item?.isActive ? (
+                <EventFeedbackCard {...item} />
+              ) : item?.eventType === "dateNight" ? (
                 <UpcomingDateNightCard {...item} />
               ) : (
                 <UpcomingEventCard {...item} />

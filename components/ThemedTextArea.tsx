@@ -34,7 +34,6 @@ export const ThemedTextarea: FC<ThemedTextareaProps> = ({
   });
   const textColor = useThemeColor({
     colorName: "text",
-    props: { dark: "black" },
   });
   const iconColor = useThemeColor({ colorName: "icon" });
   const borderColor = errorText ? "red" : iconColor;
@@ -52,15 +51,12 @@ export const ThemedTextarea: FC<ThemedTextareaProps> = ({
         style={[styles.textareaWrapper, { backgroundColor, borderColor }]}
       >
         <TextInput
-          style={[
-            styles.textarea,
-            { color: textColor },
-          ]}
+          style={[styles.textarea, { color: textColor }]}
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
           multiline={true}
           cursorColor={cursorColor}
-          textAlignVertical="top" 
+          textAlignVertical="top"
           {...otherProps}
         />
       </ThemedView>
@@ -90,15 +86,15 @@ const styles = StyleSheet.create({
   textareaWrapper: {
     borderWidth: 0.6,
     paddingHorizontal: 10,
-    borderRadius: Size.calcAverage(15), 
-    minHeight: Size.calcHeight(120), 
+    borderRadius: Size.calcAverage(15),
+    minHeight: Size.calcHeight(120),
   },
 
   textarea: {
     flex: 1,
     fontSize: Size.calcAverage(16),
     lineHeight: 22,
-    paddingTop: 10, 
+    paddingTop: 10,
   },
 
   errorText: {

@@ -13,6 +13,7 @@ import { exploreFeatures } from "@/utils/data";
 import { router } from "expo-router";
 
 const ExplorePage = () => {
+
   return (
     <ThemedView style={styles.overlay}>
       <ThemedView lightColor="#F9F9F9" style={styles.exploreheader}>

@@ -227,8 +227,6 @@ const MovieNightScreen = () => {
                   style={styles.input}
                   placeholder="Enter movie title"
                   onChangeText={setTitle}
-                  lightColor="white"
-                  darkColor="white"
                   value={title}
                   errorText={errors.title}
                 />
@@ -242,7 +240,6 @@ const MovieNightScreen = () => {
                     style={styles.input}
                     value={selectedDate}
                     placeholder="Select date"
-                    lightColor="white"
                     rightIcon={
                       <Ionicons
                         name="chevron-down-outline"
@@ -250,7 +247,6 @@ const MovieNightScreen = () => {
                         color="#9CA0AF"
                       />
                     }
-                    darkColor="white"
                     editable={false}
                   />
                 </TouchableOpacity>
@@ -280,7 +276,6 @@ const MovieNightScreen = () => {
                     style={styles.input}
                     value={selectedTime}
                     placeholder="Select time"
-                    lightColor="white"
                     rightIcon={
                       <Ionicons
                         name="chevron-down-outline"
@@ -288,7 +283,6 @@ const MovieNightScreen = () => {
                         color="#9CA0AF"
                       />
                     }
-                    darkColor="white"
                     editable={false}
                   />
                 </TouchableOpacity>
@@ -317,9 +311,7 @@ const MovieNightScreen = () => {
                   style={styles.input}
                   onChangeText={setLocation}
                   placeholder="Enter desired location"
-                  lightColor="white"
                   errorText={errors.location}
-                  darkColor="white"
                 />
               </View>
 

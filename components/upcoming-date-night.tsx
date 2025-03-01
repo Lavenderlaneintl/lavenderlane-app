@@ -38,7 +38,7 @@ const UpcomingDateNightCard: React.FC<EventsData> = ({
         </View>
 
         <Image
-          source={require("@/assets/images/movies-popcorn.png")}
+          source={require("@/assets/images/wine-cup.png")}
           resizeMode="cover"
           style={{ width: 44, height: 44 }}
         />
