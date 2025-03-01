@@ -11,12 +11,8 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { exploreFeatures } from "@/utils/data";
 import { router } from "expo-router";
-import { useUserStore } from "@/utils/store/userStore";
 
 const ExplorePage = () => {
-  const token = useUserStore.getState().authData?.token;
-
-console.log(token)
 
   return (
     <ThemedView style={styles.overlay}>
