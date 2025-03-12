@@ -130,7 +130,6 @@ const RegisterScreen = (): JSX.Element => {
           style={styles.input}
           placeholder="Enter your email address"
           lightColor="white"
-          darkColor="white"
           value={email}
           onChangeText={setEmail}
           errorText={emailError}
@@ -139,7 +138,6 @@ const RegisterScreen = (): JSX.Element => {
           style={styles.input}
           placeholder="Enter your password"
           lightColor="white"
-          darkColor="white"
           value={password}
           onChangeText={setPassword}
           isPassword

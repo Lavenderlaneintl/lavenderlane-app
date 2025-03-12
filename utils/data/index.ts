@@ -49,16 +49,16 @@ export const exploreFeatures: IAppFeatures[] = [
     route: "/CelebrationScreen",
   },
 
-  {
-    id: 7,
-    title: " Love Language",
-    icon: require("@/assets/images/love-language.png"),
-    color: "#33AB3F33",
-    route: "/LoveLanguageScreen",
-  },
+  // {
+  //   id: 7,
+  //   title: " Love Language",
+  //   icon: require("@/assets/images/love-language.png"),
+  //   color: "#33AB3F33",
+  //   route: "/LoveLanguageScreen",
+  // },
 
   {
-    id: 8,
+    id: 7,
     title: "Lavender",
     icon: require("@/assets/images/lavender-purple.png"),
     color: "#592E8333",
