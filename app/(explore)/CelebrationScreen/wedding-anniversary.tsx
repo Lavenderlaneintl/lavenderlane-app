@@ -44,9 +44,10 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
 
     onSuccess: () => {
       showToastable({
-        message: "Your anniversary celebration has been created successfully",
+        message: "Celebration created successfully.",
         status: "success",
       });
+      router.replace("/DashboardScreen")
     },
 
     onError: (error) => {
@@ -124,7 +125,6 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             width: "100%",
-
             justifyContent: "center",
             gap: Size.calcWidth(18),
             paddingBottom: Size.calcHeight(90),
@@ -160,7 +160,6 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
                       color="#9CA0AF"
                     />
                   }
-                  darkColor="white"
                   editable={false}
                 />
               </TouchableOpacity>
@@ -178,7 +177,6 @@ const WeddingAnniversaryScreen = (): JSX.Element => {
 
             <View>
               <ThemedTextarea
-                lightColor="white"
                 value={note}
                 onChangeText={setNote}
                 errorText={errors.note}

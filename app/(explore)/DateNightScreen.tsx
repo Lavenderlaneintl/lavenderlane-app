@@ -51,10 +51,10 @@ const DateNightScreen = () => {
     background: "",
   });
 
-  const [selectedDate, setSelectedDate] = useState("10-02-2025");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
-  const [selectedTime, setSelectedTime] = useState("08:00PM");
+  const [selectedTime, setSelectedTime] = useState("");
 
   const showTimePicker = () => setTimePickerVisible(true);
   const hideTimePicker = () => setTimePickerVisible(false);
@@ -129,6 +129,17 @@ const DateNightScreen = () => {
 
       formData.append("location", location);
       formData.append("reminder", reminder.toString());
+      // const selectedBackgroundItem = backgrounds.find(
+      //   (item) => item.id === selectedBackground
+      // );
+
+      // if (selectedBackgroundItem) {
+      //   formData.append("eventBgImage", {
+      //     uri: selectedBackgroundItem.background,
+      //     type: "image/jpeg",
+      //     name: `background-${selectedBackgroundItem.id}.jpg`,
+      //   } as any);
+      // }
 
       if (formData) {
         mutate({ payload: formData });
@@ -226,8 +237,6 @@ const DateNightScreen = () => {
                 <ThemeInput
                   style={styles.input}
                   placeholder="Enter Date title"
-                  lightColor="white"
-                  darkColor="white"
                   value={title}
                   onChangeText={setTitle}
                   errorText={errors.title}
@@ -242,7 +251,6 @@ const DateNightScreen = () => {
                     style={styles.input}
                     value={selectedDate}
                     placeholder="Select date"
-                    lightColor="white"
                     rightIcon={
                       <Ionicons
                         name="chevron-down-outline"
@@ -250,7 +258,6 @@ const DateNightScreen = () => {
                         color="#9CA0AF"
                       />
                     }
-                    darkColor="white"
                     editable={false}
                   />
                 </TouchableOpacity>
@@ -280,7 +287,6 @@ const DateNightScreen = () => {
                     style={styles.input}
                     value={selectedTime}
                     placeholder="Select time"
-                    lightColor="white"
                     rightIcon={
                       <Ionicons
                         name="chevron-down-outline"
@@ -288,7 +294,6 @@ const DateNightScreen = () => {
                         color="#9CA0AF"
                       />
                     }
-                    darkColor="white"
                     editable={false}
                   />
                 </TouchableOpacity>
@@ -316,8 +321,6 @@ const DateNightScreen = () => {
                 <ThemeInput
                   style={styles.input}
                   placeholder="Enter desired location"
-                  lightColor="white"
-                  darkColor="white"
                   errorText={errors.location}
                   value={location}
                   onChangeText={setLocation}

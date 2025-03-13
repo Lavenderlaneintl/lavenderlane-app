@@ -148,16 +148,12 @@ const LoginScreen = (): JSX.Element => {
         <ThemeInput
           style={styles.input}
           placeholder="Enter your email address"
-          lightColor="white"
-          darkColor="white"
           value={email}
           onChangeText={setEmail}
         />
         <ThemeInput
           style={styles.input}
           placeholder="Enter your password"
-          lightColor="white"
-          darkColor="white"
           value={password}
           onChangeText={setPassword}
           isPassword

@@ -1,5 +1,6 @@
 export interface EventsData {
   id: string;
+  isActive: boolean;
   createdBy: {
     id: string;
     firstName: string | null;

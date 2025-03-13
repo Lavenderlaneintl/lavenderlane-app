@@ -1,4 +1,7 @@
-export type UserGender = "Male" | "Female";
+export enum UserGender {
+  Male = "Male",
+  Female = "Female",
+}
 
 export interface IUserPayload {
   email: string;

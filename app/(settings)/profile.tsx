@@ -22,12 +22,17 @@ import ThemeInput from "@/components/ThemedInput";
 import { useUserStore } from "@/utils/store/userStore";
 import { useMutation } from "@tanstack/react-query";
 import { UpdateProfileById } from "@/utils/apis/user";
+import { UserGender } from "@/utils/interfaces/user.interfaces";
 
 const ProfilePage = (): JSX.Element => {
-  const [edit, setEdit] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
+  const [error, setError] = useState({
+    firstName: "",
+    lastName: "",
+    gender: "",
+  });
 
   const { user, refetchUser, isRefetching } = useUserStore();
 
@@ -44,7 +49,6 @@ const ProfilePage = (): JSX.Element => {
 
     onSuccess: (data) => {
       refetchUser();
-      setEdit(false);
     },
 
     onError: (error: any) => {
@@ -52,14 +56,49 @@ const ProfilePage = (): JSX.Element => {
     },
   });
 
+  const validateInputs = () => {
+    const newErrors = {
+      firstName: "",
+      lastName: "",
+      gender: "",
+    };
+
+    let isValid = true;
+
+    if (!firstName || firstName.trim() === "") {
+      newErrors.firstName = "Enter first name";
+      isValid = false;
+    }
+
+    if (!lastName || lastName.trim() === "") {
+      newErrors.lastName = "Enter last name";
+      isValid = false;
+    }
+
+    if (!gender || gender.trim() === "") {
+      newErrors.gender = "Enter gender";
+      isValid = false;
+    } else if (
+      !Object.values(UserGender).includes(gender.toLowerCase() as UserGender)
+    ) {
+      newErrors.gender = "Gender must be either 'male' or 'female'";
+      isValid = false;
+    }
+
+    setError(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = () => {
+    if (!validateInputs()) return;
+
     if (user) {
       mutate({
         userId: user.id,
         payload: {
           firstName,
           lastName,
-          gender,
+          gender: gender as UserGender,
         },
       });
     }
@@ -88,22 +127,6 @@ const ProfilePage = (): JSX.Element => {
             >
               <Ionicons name="chevron-back-outline" size={24} color="white" />
             </TouchableOpacity>
-
-            {!edit && (
-              <TouchableOpacity onPress={() => setEdit(true)}>
-                <ThemedView
-                  style={{
-                    paddingHorizontal: Size.calcWidth(18),
-                    paddingVertical: Size.calcHeight(10),
-                    borderRadius: Size.calcWidth(60),
-                  }}
-                  darkColor="#00000"
-                  lightColor="#00000"
-                >
-                  <ThemedText lightColor="#592E83">Edit</ThemedText>
-                </ThemedView>
-              </TouchableOpacity>
-            )}
           </View>
 
           <ThemedView style={[{ gap: Size.calcHeight(25) }]}>
@@ -143,29 +166,28 @@ const ProfilePage = (): JSX.Element => {
 
               <View style={{ width: "100%", gap: Size.calcWidth(16) }}>
                 <ThemeInput
-                  editable={edit}
                   label="First Name"
                   placeholder="Enter first name"
                   value={firstName}
                   onChangeText={setFirstName}
+                  errorText={error.firstName}
                 />
                 <ThemeInput
-                  editable={edit}
                   label="Last Name"
                   placeholder="Enter last name"
                   value={lastName}
+                  errorText={error.lastName}
                   onChangeText={setLastName}
                 />
                 <ThemeInput
-                  editable={edit}
                   label="Gender"
                   placeholder="Enter gender"
                   value={gender}
                   onChangeText={setGender}
+                  errorText={error.gender}
                 />
                 <AppButton
                   title="Save"
-                  disabled={!edit}
                   loading={isLoading}
                   onPress={handleSubmit}
                 />
